@@ -1,0 +1,22 @@
+# Packages, native-compiled code, downloaded/generated binaries.
+# All recreated on first start (see AGENTS.md).
+/elpa/
+/eln-cache/
+/eat-terminfo/
+/parinfer-rust/
+/rass/__pycache__/
+
+# Personal state written by Emacs
+/auto-save-list/
+/backups/
+/history
+/places
+/projects
+/recentf
+/tramp
+/transient/
+/url/
+/custom.el
+
+# Local backup of the original Emacs Client.app
+/backup-Emacs-Client.app/
