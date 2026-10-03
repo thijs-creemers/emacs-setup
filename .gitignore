@@ -4,6 +4,7 @@
 /eln-cache/
 /eat-terminfo/
 /parinfer-rust/
+/tree-sitter/
 /rass/__pycache__/
 
 # Personal state written by Emacs
@@ -16,6 +17,7 @@
 /tramp
 /transient/
 /url/
+/request/
 /custom.el
 
 # Local backup of the original Emacs Client.app

@@ -30,6 +30,11 @@
   (setq mac-command-modifier 'meta
         mac-option-modifier 'none))
 
+;; Secrets (Linear key, GitHub token for Forge) live in the macOS Keychain as
+;; *internet* passwords: Emacs matches -s (server) and -a (account) there.
+;; (For generic passwords it matches -c, so `add-generic-password -s` isn't found.)
+(setq auth-sources '(macos-keychain-internet "~/.authinfo.gpg"))
+
 ;; GUI Emacs and the daemon on macOS do not see your shell PATH; this fixes it.
 ;; Needed to find pandoc, clojure-lsp, pyright, etc. (all in /opt/homebrew/bin).
 (use-package exec-path-from-shell

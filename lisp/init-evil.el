@@ -22,6 +22,25 @@
   :after evil
   :config (evil-commentary-mode 1))
 
+;; Cmd-/ (= M-/, Cmd is Meta): toggle comment on this line or the selected
+;; lines, like other editors. Cursor stays put. Works in every state.
+(defun my/toggle-comment ()
+  "Comment or uncomment the current line, or all lines in the selection."
+  (interactive)
+  (let* ((region (use-region-p))
+         (beg (if region (region-beginning) (point)))
+         (end (if region (region-end) (point))))
+    (save-excursion
+      ;; A line selection ends at the start of the next line: don't include it.
+      (when (and region (> end beg) (save-excursion (goto-char end) (bolp)))
+        (setq end (1- end)))
+      (comment-or-uncomment-region (progn (goto-char beg) (line-beginning-position))
+                                   (progn (goto-char end) (line-end-position))))))
+
+(global-set-key (kbd "M-/") #'my/toggle-comment)
+(with-eval-after-load 'evil
+  (evil-define-key '(normal visual insert) 'global (kbd "M-/") #'my/toggle-comment))
+
 ;; ys / cs / ds to add, change, delete surroundings.
 (use-package evil-surround
   :after evil
@@ -93,11 +112,19 @@
   (kbd "<leader>gs") #'diff-hl-stage-dwim             ; stage hunk
   (kbd "<leader>gr") #'diff-hl-revert-hunk
   (kbd "<leader>gp") #'diff-hl-show-hunk              ; preview hunk
+  ;; GitHub (Forge + gh)
+  (kbd "<leader>gP") #'forge-list-pullreqs            ; PRs of this repo
+  (kbd "<leader>gI") #'forge-list-issues
+  (kbd "<leader>gn") #'forge-create-pullreq           ; new PR from this branch
+  (kbd "<leader>go") #'forge-browse                   ; open in browser
+  (kbd "<leader>gc") #'my/gh-pr-checks                ; CI status (live)
   (kbd "]h")         #'diff-hl-next-hunk
   (kbd "[h")         #'diff-hl-previous-hunk
   ;; open / tasks
   (kbd "<leader>ot") #'my/vterm-project               ; terminal in project root
   (kbd "<leader>oT") #'my/vterm-here                  ; terminal here
+  (kbd "<leader>od") #'dired-jump                     ; folder of this file
+  (kbd "<leader>oD") #'my/dired-project-root
   (kbd "<leader>ou") #'browse-url                     ; open URL (default: at cursor)
   (kbd "<leader>tb") #'my/bb-task
   ;; Claude Code
@@ -109,12 +136,15 @@
   (kbd "<leader>aC") #'claude-code-ide-continue            ; continue last one
   (kbd "<leader>ae") #'claude-code-ide-send-escape         ; interrupt Claude
   (kbd "<leader>aq") #'claude-code-ide-stop
+  (kbd "<leader>ax") #'claude-code-ide-clear-selection  ; drop file/selection from prompt
   (kbd "<leader>aa") #'my/claude-accept-diff
   (kbd "<leader>ad") #'my/claude-deny-diff
   ;; Linear
   (kbd "<leader>ll") #'linear-emacs-list-issues
   (kbd "<leader>lp") #'linear-emacs-list-issues-by-project
   (kbd "<leader>ln") #'linear-emacs-new-issue
+  (kbd "<leader>ls") #'my/linear-show-ticket          ; find + view one ticket
+  (kbd "<leader>lc") #'my/linear-add-comment          ; comment on a ticket
   ;; help
   (kbd "<leader>hk") #'my/open-keys-cheatsheet
   (kbd "<leader>hr") #'my/reload-config

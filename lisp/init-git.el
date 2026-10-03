@@ -33,4 +33,22 @@
   (interactive)
   (magit-diff-range "main...HEAD"))
 
+;; Forge: GitHub PRs and issues inside Magit (@ in Magit for its menu).
+;; Token: Keychain internet password, server api.github.com, account "<user>^forge".
+;; Per repo once: M-x forge-add-repository (pulls PRs/issues into a local db).
+(use-package forge
+  :after magit)
+
+;; SPC g c: live CI status of this branch's PR, as on GitHub (gh in vterm).
+(defun my/gh-pr-checks ()
+  "Show `gh pr checks --watch' for the current branch in a bottom window."
+  (interactive)
+  (let* ((root (project-root (project-current t)))
+         (name (format "*gh checks %s*" (file-name-nondirectory (directory-file-name root))))
+         (new (not (get-buffer name)))
+         (buf (progn (save-window-excursion (my/vterm-in root name)) (get-buffer name))))
+    (display-buffer buf '((display-buffer-in-side-window) (side . bottom) (window-height . 0.3)))
+    (when new
+      (with-current-buffer buf (vterm-send-string "gh pr checks --watch\n")))))
+
 (provide 'init-git)

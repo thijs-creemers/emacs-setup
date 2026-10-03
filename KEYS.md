@@ -129,6 +129,16 @@ Start: open a `.clj` file in a project with `deps.edn` / `project.clj`, then `, 
 | `, r g` | `(user/go)`                                      |
 | `, r h` | `(user/halt)`                                    |
 
+### Format (cljfmt, via clojure-lsp)
+
+Only on demand, never on save. Rules: cljfmt defaults (or the project's `.cljfmt.edn`).
+
+| Keys             | Action                                              |
+|------------------|-----------------------------------------------------|
+| `, =`            | Format the top-level form under the cursor          |
+| `, =` (visual)   | Format the selection                                |
+| `SPC c f`        | Format the whole file                               |
+
 ### Parinfer (indent mode, as in nvim)
 
 Indentation drives the parens: indent a line and parens move with it.
@@ -202,6 +212,22 @@ schemas like GitHub Actions, docker-compose and k8s.
 
 ---
 
+## Shell scripts (Bash / sh / Zsh)
+
+`.sh`, `.bash` and scripts with a bash/sh shebang: tree-sitter colors (also variables
+inside strings), ShellCheck warnings as you type, completion.
+`.zshrc` / `.zsh`: colors only (no checker exists for zsh).
+
+| Keys      | Action                                            |
+|-----------|---------------------------------------------------|
+| `K`       | Docs for command under cursor (man page / help)   |
+| `]d` / `[d` | Next / previous ShellCheck warning              |
+| `SPC c a` | Quick fix (e.g. add the missing quotes)           |
+| `SPC c f` | Format with shfmt                                 |
+| `gd`      | Go to function / variable definition              |
+
+---
+
 ## Markdown
 
 `.md` files open in GitHub flavor: tables, task lists, colored code blocks.
@@ -255,6 +281,73 @@ In Magit status: `s` stage, `u` unstage, `c c` commit, `P p` push, `F p` pull,
 Key popups (after `c`, `P`, `b`, ...): `Esc` closes them.
 Commit message window: type message, `Esc`, then `, ,` commit or `, k` cancel.
 Colored bars in the margin show added / changed / deleted lines.
+
+### GitHub: pull requests, issues, CI (Forge + gh)
+
+| Keys      | Action                                                   |
+|-----------|----------------------------------------------------------|
+| `SPC g P` | Pull requests of this repo (`RET` opens one)             |
+| `SPC g I` | Issues of this repo                                      |
+| `SPC g n` | New PR from the current branch (`, ,` submits)           |
+| `SPC g o` | Open repo / PR / issue in the browser                    |
+| `SPC g c` | Live CI status of this branch's PR (bottom window)       |
+| `@` (Magit) | Forge menu: pull new data, check out a PR as worktree, ... |
+
+Review someone's PR: `SPC g P`, put the cursor on it, `@`, then the worktree checkout
+option; it opens as its own project. Pull fresh data: `@ f f` in Magit.
+Setup once per repo: `M-x forge-add-repository` in that repo. Token: see AGENTS.md.
+
+---
+
+## Files and folders (Dired)
+
+Open: `SPC o d` = folder of the current file (cursor on it), `SPC o D` = project root.
+Folders are listed first; `(` shows / hides details (size, date, permissions).
+
+### Move around
+
+| Keys        | Action                                    |
+|-------------|-------------------------------------------|
+| `j` / `k`   | Down / up                                 |
+| `RET`       | Open file or folder                       |
+| `-`         | Up to the parent folder                   |
+| `E`         | Open with the macOS app (like double-click) |
+| `g r`       | Refresh                                   |
+| `q`         | Close                                     |
+
+### Change files
+
+Commands work on the **marked** files, or on the file under the cursor if none are marked.
+
+| Keys      | Action                                                      |
+|-----------|-------------------------------------------------------------|
+| `R`       | Rename or move (type a new name, or a folder to move into)  |
+| `C`       | Copy                                                        |
+| `D`       | Delete (goes to the macOS Trash; Finder "Put Back" restores)|
+| `+`       | New folder                                                  |
+| `Y`       | Copy file name                                              |
+
+New file: `SPC f F`, type the name, `M-RET`.
+
+### Mark several files
+
+| Keys      | Action                                         |
+|-----------|------------------------------------------------|
+| `m`       | Mark (cursor moves to the next file)           |
+| `u` / `U` | Unmark this / unmark all                       |
+| `t`       | Invert marks                                   |
+| `% m`     | Mark by regex, e.g. `\.log$`                   |
+| `d` then `x` | Flag for deletion, then delete all flagged  |
+
+### Rename many files at once: edit the list as text
+
+`i` makes the file names editable. Change them with normal vim editing (`cw`, `:s/old/new/`,
+visual block), then `Esc` and `, ,` to apply, or `, k` to cancel.
+
+### Move or copy between two folders
+
+Open two Dired windows side by side (`SPC w v`, then `SPC o d` / `-` in the other one).
+`R` or `C` now suggest the *other* window's folder as the destination.
 
 ---
 
@@ -316,11 +409,13 @@ selection you are on, can use xref / imenu / LSP, and shows its edits as diffs.
 | `SPC a r`          | Resume an older conversation                    |
 | `SPC a C`          | Continue the last conversation                  |
 | `SPC a q`          | Stop Claude                                     |
+| `SPC a x`          | Drop the file/selection Claude currently sees   |
 | `SPC a m`          | Menu with all commands                          |
 
-In the Claude window: type in insert mode, `S-RET` = new line in the prompt,
-`Esc` = vim normal mode (then `SPC ...`, `C-w h` work; `i` to type again).
-`C-c C-x` drops the file/selection Claude currently sees.
+In the Claude window all of Claude's own shortcuts work: `Esc` (interrupt), `Esc Esc`,
+`Shift-Tab` (modes), `Ctrl-C`, `Ctrl-R`, `Ctrl-O`, `Ctrl-T`, `Ctrl-V`, ... `S-RET` = new line.
+**`Ctrl-\`** is the only Emacs key there: it switches to vim normal mode, so `SPC a c`
+(hide), `C-w h` (other window), `SPC b d` (close) work. `i` = back to typing to Claude.
 
 ---
 
@@ -331,10 +426,22 @@ In the Claude window: type in insert mode, `S-RET` = new line in the prompt,
 | `SPC l l` | My open issues (Org file `~/org/linear.org`) |
 | `SPC l p` | Issues of one project                   |
 | `SPC l n` | New issue                               |
+| `SPC l s` | Find one ticket and show it (Markdown: details, description, comments) |
+| `SPC l c` | Comment on a ticket (the one you view / stand on, else asks) |
+| `, t`     | In the Org file: set a ticket's state (synced to Linear) |
+| `, v`     | In the Org file: show the ticket under the cursor |
+| `TAB`     | Open / fold a project or status group   |
 
-Change an issue's TODO state in the Org file (`t` on the heading) and it syncs back
-to Linear. Setup once, API key from Linear settings > Security & access:
-`security add-generic-password -a apikey -s api.linear.app -w <KEY>`
+The file is grouped per project, then per status (In Progress, In Review, Todo,
+Backlog, ...), with the ticket number in front: `*** TODO [#B] BOU-590 Title`.
+Done / Canceled groups start folded. `SPC l l` again refreshes and regroups.
+
+Finding a ticket (`SPC l s`): type to filter your own tickets (number or title words),
+or type a number like `BOU-123` for any ticket, or words + `M-RET` to search all of Linear.
+In a ticket view: `, c` comment, `, r` refresh, `, o` open in browser, `q` close.
+Writing a comment (Markdown): `Esc`, then `, ,` send or `, k` cancel.
+Setup once, API key from Linear settings > Security & access:
+`security add-internet-password -a apikey -s api.linear.app -w <KEY>`
 
 ---
 
@@ -342,6 +449,7 @@ to Linear. Setup once, API key from Linear settings > Security & access:
 
 | Keys             | Action                                      |
 |------------------|---------------------------------------------|
+| `Cmd-/`          | Toggle comment on line / selected lines (any mode, cursor stays) |
 | `gcc`            | Toggle comment on line                      |
 | `gc` + motion    | Comment motion, e.g. `gcap` = paragraph     |
 | `ys` + motion + char | Surround, e.g. `ysiw"` = quote word     |
@@ -363,6 +471,9 @@ to Linear. Setup once, API key from Linear settings > Security & access:
 | `C-j` / `C-k`     | Next / previous candidate             |
 | `RET`             | Choose                                |
 | `M-RET`           | Use exactly what you typed (new file) |
+| `Backspace` after `/` | File prompt: up to the parent folder |
+| `M-Backspace`     | File prompt: remove one folder / word |
+| `~/` or `/`       | File prompt: start over from home / root |
 | `Esc`             | Cancel                                |
 
 ### Code popup (appears while typing)

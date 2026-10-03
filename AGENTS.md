@@ -16,6 +16,7 @@ User-facing key reference: `KEYS.md`. This file is for whoever changes the confi
 | `rass/slow-start.py` | Parked rass preset (see Tailwind below) |
 | `eat-terminfo/` | Generated: eat terminfo compiled for macOS (git-ignored) |
 | `parinfer-rust/` | Downloaded parinfer library (git-ignored, see Clojure gotchas) |
+| `tree-sitter/` | Bash grammar, compiled on first start by `init-shell.el` (git-ignored) |
 
 Git tracks only the config and docs; packages, caches and personal state are in `.gitignore`.
 New machine: clone, start Emacs once (installs packages), then build the vterm module and
@@ -109,6 +110,12 @@ Don't claim a change works without running it. Patterns that worked:
   crashed the macOS JVM).
 - vterm starts its shell before that hook runs: `my/vterm-in` passes `.env` explicitly.
 
+**Dired (`init-dired.el`)**
+- In the user's shell `ls` is eza; Dired must use GNU ls, so `insert-directory-program` is
+  set to `gls` (coreutils) for `--group-directories-first`.
+- `delete-by-moving-to-trash` uses macOS' own trash (`system-move-file-to-trash`); tests
+  can't list `~/.Trash` (macOS privacy), so check the file left its folder instead.
+
 **Completion / UI**
 - Search commands use a side-by-side vertico layout (`vertico-multiform`). The file finder
   uses its own category `project-finder`: Emacs 30's project *picker* also uses
@@ -131,10 +138,39 @@ Don't claim a change works without running it. Patterns that worked:
   so rass drops it and Clojure completion breaks. `rass/slow-start.py` raises that timeout
   but its last test hung. Resume when the boundary admin rework (daisyUI) starts.
 
+**Keychain secrets**
+- Store as *internet* passwords (`add-internet-password -a <account> -s <server>`). Emacs'
+  `macos-keychain-generic` backend matches generic entries by `-c`, not `-s`, so
+  `add-generic-password -s` entries were never found (Linear "key not set").
+
+**Linear (`init-linear.el`)**
+- linear.org layout comes from an `:around` advice on `linear-emacs--build-org-content`:
+  `* Project / ** Status / *** TODO BOU-123 Title`. Sync only reads level-3 TODO state +
+  properties, so the grouping and ticket number in the title are safe.
+- Don't call `linear-emacs-enable-org-sync`: it hooks the buffer current at load time
+  (never linear.org), and its after-save hook re-sends *every* ticket's state.
+  `my/linear-org-sync-setup` adds only the state-change hook, in linear.org.
+- Its sync handles one ticket only when `this-command` is `org-todo`; otherwise it walks
+  the whole file. `my/org-todo-choose` (`, t`) binds it accordingly.
+- `org-todo` with `C-u` means "log note" in Org 9.7, not "choose state".
+
+**Forge (GitHub PRs/issues)**
+- Forge does not use `gh`; it reads a token from the Keychain (`auth-sources` is set in
+  `init-core.el`): *internet* password, server `api.github.com`, account `<github-user>^forge`
+  (`security add-internet-password -U -a '<user>^forge' -s api.github.com -w "$(gh auth token)"`). It needs the
+  scopes `repo`, `user` and `read:org`; the token from `gh auth token` works once `user`
+  is added (`gh auth refresh -h github.com -s user`).
+- Each repo is added once with `M-x forge-add-repository` (fills a local SQLite db).
+- `SPC g c` (`my/gh-pr-checks`) runs `gh pr checks --watch` in vterm, in a bottom side window.
+
 **Magit / Claude**
 - Esc closes transient popups; commit window `, ,` / `, k`; `q` restores the window layout.
 - claude-code-ide: diffs open in ediff; `SPC a a` / `SPC a d` answer its quit + "Accept the
   changes?" prompts. Backend is vterm.
+- Claude window: `my/claude-term-mode` (switched on via advice on
+  `claude-code-ide--setup-terminal-keybindings`) sends Claude's shortcuts (Esc, C-c, S-Tab,
+  C-r, C-o, ...) to the terminal via evil *insert* aux keymaps, which beat evil's own
+  insert map and vterm's C-c prefix. Only `C-\` stays for Emacs (normal state).
 
 **Emacs Client.app**
 - emacs-plus' AppleScript ran `open -a Emacs`, which launched the separate
@@ -147,6 +183,6 @@ Don't claim a change works without running it. Patterns that worked:
 
 Homebrew: `clojure-lsp` (native), `pyright`, `marksman`, `pandoc`, `asciidoctor`, `cmake`,
 `libvterm`, `JetBrains Mono Nerd Font` (cask). npm: `vscode-langservers-extracted`,
-`@tailwindcss/language-server`. uv: `rassumfrassum`. Optional: `yaml-language-server`.
-Linear API key lives in the macOS Keychain (`security add-generic-password -a apikey
+`@tailwindcss/language-server`, `bash-language-server`. Homebrew also: `shellcheck`, `shfmt`. uv: `rassumfrassum`. Optional: `yaml-language-server`.
+Linear API key and the Forge GitHub token live in the macOS Keychain (`security add-internet-password -a apikey
 -s api.linear.app -w <KEY>`), never in this repo.

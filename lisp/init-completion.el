@@ -7,10 +7,16 @@
   :custom (vertico-count 15)
   :bind (:map vertico-map
               ("C-j" . vertico-next)
-              ("C-k" . vertico-previous))
+              ("C-k" . vertico-previous)
+              ;; File prompts: Backspace after "/" goes to the parent folder,
+              ;; M-Backspace removes one folder/word. Other prompts: normal.
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
   :config
   (vertico-mode 1)
-  (vertico-multiform-mode 1))
+  (vertico-multiform-mode 1)
+  ;; Typing ~/ or / after a path drops the old part: ~/a/b/~/ -> ~/
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
 
 ;; Layout: search commands show list left, preview right (Telescope).
 ;; Everything else (M-x, project picker, prompts): normal minibuffer.

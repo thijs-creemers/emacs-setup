@@ -17,10 +17,12 @@
 (require 'init-paredit)     ; slurp/barf/drag/raise (nvim-paredit keys)
 (require 'init-python)      ; python + pyright
 (require 'init-yaml)        ; yaml-mode
+(require 'init-shell)       ; bash/zsh: tree-sitter, LSP, ShellCheck
 (require 'init-markdown)    ; markdown-mode + preview
 (require 'init-asciidoc)    ; adoc-mode + preview/pdf
 (require 'init-css)         ; css/scss + LSP + color preview
 (require 'init-git)         ; magit + diff-hl
+(require 'init-dired)       ; file manager: move, rename, delete
 (require 'init-term)        ; vterm terminal + bb tasks
 (require 'init-linear)      ; Linear issues in Org
 (require 'init-claude)      ; Claude Code CLI (claude-code-ide)

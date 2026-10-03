@@ -34,4 +34,39 @@
 (defun my/claude-accept-diff () "Accept Claude's change." (interactive) (my/claude-diff-quit t))
 (defun my/claude-deny-diff ()   "Reject Claude's change." (interactive) (my/claude-diff-quit nil))
 
+;; ---- Claude window: Claude's own keys win (Esc, C-c, S-Tab, C-r, C-o, ...) ----
+;; Only C-\ is kept for Emacs: it switches to vim normal mode, so SPC a c,
+;; C-w h, SPC b d work again; i goes back to typing to Claude.
+(defvar my/claude-passthrough-keys
+  '("C-c" "C-d" "C-r" "C-o" "C-t" "C-l" "C-v" "C-b" "C-g" "C-j" "C-k" "C-u" "C-y"
+    "C-a" "C-e" "C-w" "C-n" "C-p" "C-f" "C-s" "C-_" "TAB" "M-p" "M-t" "M-b" "M-f")
+  "Keys sent straight to Claude in its window (besides Esc and Shift-Tab).")
+
+(defun my/claude-send-key ()
+  "Send the key that invoked this command to the Claude terminal."
+  (interactive)
+  (vterm--self-insert))
+
+(defun my/claude-send-shift-tab () (interactive) (vterm-send-key "<tab>" t))
+
+(define-minor-mode my/claude-term-mode
+  "Claude window: send Claude's shortcuts to Claude, keep only C-\\ for Emacs."
+  :keymap (make-sparse-keymap))
+
+(with-eval-after-load 'evil
+  (dolist (key my/claude-passthrough-keys)
+    (evil-define-key 'insert my/claude-term-mode-map (kbd key) #'my/claude-send-key))
+  (evil-define-key 'insert my/claude-term-mode-map
+    (kbd "<escape>") #'vterm-send-escape
+    (kbd "<backtab>") #'my/claude-send-shift-tab
+    (kbd "C-\\") #'evil-normal-state))
+
+;; The package sets up every new Claude window here; switch our mode on too.
+(defun my/claude-term-setup (&rest _)
+  (when (derived-mode-p 'vterm-mode)
+    (my/claude-term-mode 1)
+    (evil-normalize-keymaps)))
+
+(advice-add 'claude-code-ide--setup-terminal-keybindings :after #'my/claude-term-setup)
+
 (provide 'init-claude)

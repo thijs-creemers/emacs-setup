@@ -36,8 +36,22 @@
     ;; parinfer
     (kbd "<localleader>pt") #'parinfer-rust-toggle-disable
     (kbd "<localleader>pm") #'parinfer-rust-switch-mode
+    ;; format (cljfmt via clojure-lsp); whole file: SPC c f
+    (kbd "<localleader>=") #'my/clojure-format-form
     ;; docs
-    (kbd "K") #'cider-doc))
+    (kbd "K") #'cider-doc)
+  (evil-define-key 'visual clojure-mode-map
+    (kbd "<localleader>=") #'eglot-format))           ; format selection
+
+;; , = : format only the top-level form under the cursor (cljfmt rules),
+;; so the rest of the file stays untouched.
+(defun my/clojure-format-form ()
+  "Format the top-level form at point via the LSP server."
+  (interactive)
+  (save-excursion
+    (let ((end (progn (end-of-defun) (point)))
+          (beg (progn (beginning-of-defun) (point))))
+      (eglot-format beg end))))
 
 (defun my/cider-refresh-all ()   (interactive) (cider-ns-refresh 'refresh-all))
 (defun my/cider-refresh-clear () (interactive) (cider-ns-refresh 'clear))
