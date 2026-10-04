@@ -59,9 +59,9 @@
     (kbd "<e") #'my/drag-element-backward
     (kbd ">f") #'my/drag-form-forward
     (kbd "<f") #'my/drag-form-backward
-    (kbd "<localleader>o") #'my/raise-form
-    (kbd "<localleader>O") #'my/raise-element
-    (kbd "<localleader>@") #'paredit-splice-sexp)
+    (kbd "<localleader>o") '("Raise form" . my/raise-form)
+    (kbd "<localleader>O") '("Raise element" . my/raise-element)
+    (kbd "<localleader>@") '("Splice (remove parens)" . paredit-splice-sexp))
   (evil-define-key '(visual operator) clojure-mode-map
     "af" #'my/a-form   "if" #'my/inner-form
     "ae" #'my/an-element "ie" #'my/an-element))

@@ -16,8 +16,8 @@
 ;; (Same as C-c C-c / C-c C-k.)
 (with-eval-after-load 'with-editor
   (evil-define-key 'normal with-editor-mode-map
-    (kbd "<localleader>,") #'with-editor-finish
-    (kbd "<localleader>k") #'with-editor-cancel))
+    (kbd "<localleader>,") '("Commit (finish)" . with-editor-finish)
+    (kbd "<localleader>k") '("Cancel" . with-editor-cancel)))
 
 ;; Colored bars in the margin for added/changed/deleted lines (like gitsigns).
 ;; flydiff = also for unsaved changes.

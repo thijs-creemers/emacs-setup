@@ -15,7 +15,8 @@ inside the editor.
   project grep, recent files, symbols.
 - **Clojure:** CIDER REPL, clojure-lsp, parinfer (indent mode) and paredit-style structural
   editing, Integrant `user/reset`/`go`/`halt`, namespace refresh.
-- **Other languages:** Python (pyright), Bash with ShellCheck, YAML, Markdown and AsciiDoc
+- **Python:** pyright + Ruff, automatic `.venv`, pytest keys, Django commands and shell.
+- **Other languages:** Bash with ShellCheck, YAML, Markdown and AsciiDoc
   with live preview and PDF export, CSS/SCSS with formatting, Emmet and Tailwind/daisyUI
   completion.
 - **Git:** Magit, changed lines in the margin, stage/revert hunks, worktrees.
@@ -35,7 +36,7 @@ git clone git@github.com:thijs-creemers/emacs-setup.git ~/.emacs.d
 
 # Tools the config uses (skip what you don't need)
 brew install clojure-lsp/brew/clojure-lsp-native pyright marksman pandoc asciidoctor \
-             cmake libvterm node uv shellcheck shfmt
+             cmake libvterm node uv shellcheck shfmt ruff
 brew install --cask font-jetbrains-mono-nerd-font
 npm install -g vscode-langservers-extracted @tailwindcss/language-server bash-language-server
 uv tool install rassumfrassum

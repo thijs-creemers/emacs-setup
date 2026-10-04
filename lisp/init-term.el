@@ -16,7 +16,7 @@
 (defun my/vterm-in (dir name)
   (with-temp-buffer
     (setq default-directory dir)
-    (let ((process-environment (append (my/dotenv-for-directory dir)
+    (let ((process-environment (append (my/project-env-vars dir)
                                        (default-value 'process-environment))))
       (vterm name))))
 

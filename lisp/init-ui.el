@@ -62,10 +62,10 @@
     "SPC g" "git"     "SPC o" "open"     "SPC t" "tasks" "SPC l" "linear"
     "SPC a" "claude")
   ;; "," group names differ per language, so set them per mode.
-  (dolist (mode '(clojure-mode clojurescript-mode clojurec-mode python-mode))
+  (dolist (mode '(clojure-mode clojurescript-mode clojurec-mode python-mode python-ts-mode))
     (which-key-add-major-mode-key-based-replacements mode
       ", c" "connect"   ", e" "eval"   ", l" "log/repl"
-      ", r" "refresh"   ", t" "test"   ", p" "parinfer"))
+      ", r" "refresh"   ", t" "test"   ", p" "parinfer"   ", d" "django"))
   (which-key-mode 1))
 
 (provide 'init-ui)

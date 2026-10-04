@@ -16,13 +16,13 @@
   :config
   ;; "," = Markdown commands.
   (evil-define-key 'normal markdown-mode-map
-    (kbd "<localleader>p") #'markdown-live-preview-mode  ; preview side by side
-    (kbd "<localleader>o") #'markdown-open               ; open in browser
-    (kbd "<localleader>h") #'markdown-toggle-markup-hiding
-    (kbd "<localleader>l") #'markdown-insert-link
-    (kbd "<localleader>t") #'markdown-table-align
-    (kbd "<localleader>x") #'markdown-toggle-gfm-checkbox
-    (kbd "<localleader>i") #'consult-imenu               ; jump to heading
+    (kbd "<localleader>p") '("Preview" . markdown-live-preview-mode)  ; preview side by side
+    (kbd "<localleader>o") '("Open in browser" . markdown-open)               ; open in browser
+    (kbd "<localleader>h") '("Hide / show markup" . markdown-toggle-markup-hiding)
+    (kbd "<localleader>l") '("Insert link" . markdown-insert-link)
+    (kbd "<localleader>t") '("Align table" . markdown-table-align)
+    (kbd "<localleader>x") '("Toggle checkbox" . markdown-toggle-gfm-checkbox)
+    (kbd "<localleader>i") '("Jump to heading" . consult-imenu)               ; jump to heading
     (kbd "TAB")        #'markdown-cycle              ; fold / unfold heading
     (kbd "gx")         #'markdown-follow-thing-at-point)) ; also [text](url) links
 

@@ -64,7 +64,7 @@
     (org-todo state)))
 
 (with-eval-after-load 'org
-  (evil-define-key 'normal org-mode-map (kbd "<localleader>t") #'my/org-todo-choose))
+  (evil-define-key 'normal org-mode-map (kbd "<localleader>t") '("Set ticket state" . my/org-todo-choose)))
 
 ;; Sync a changed TODO state of one ticket back to Linear, in linear.org only.
 ;; (linear-emacs-enable-org-sync hooks the wrong buffer, and its after-save
@@ -242,14 +242,14 @@
 
 (with-eval-after-load 'evil
   (evil-define-key 'normal my/linear-ticket-mode-map
-    (kbd "<localleader>c") #'my/linear-add-comment
-    (kbd "<localleader>r") #'my/linear-ticket-refresh
-    (kbd "<localleader>o") #'my/linear-ticket-browse
+    (kbd "<localleader>c") '("Comment" . my/linear-add-comment)
+    (kbd "<localleader>r") '("Refresh" . my/linear-ticket-refresh)
+    (kbd "<localleader>o") '("Open in browser" . my/linear-ticket-browse)
     "q" #'quit-window)
   (evil-define-key 'normal my/linear-comment-mode-map
-    (kbd "<localleader>,") #'my/linear-comment-send
-    (kbd "<localleader>k") #'my/linear-comment-cancel)
-  (evil-define-key 'normal org-mode-map (kbd "<localleader>v") #'my/linear-show-ticket-at-point))
+    (kbd "<localleader>,") '("Send comment" . my/linear-comment-send)
+    (kbd "<localleader>k") '("Cancel" . my/linear-comment-cancel))
+  (evil-define-key 'normal org-mode-map (kbd "<localleader>v") '("Show ticket" . my/linear-show-ticket-at-point)))
 (keymap-set my/linear-comment-mode-map "C-c C-c" #'my/linear-comment-send)
 (keymap-set my/linear-comment-mode-map "C-c C-k" #'my/linear-comment-cancel)
 

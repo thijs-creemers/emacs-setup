@@ -48,10 +48,13 @@ Start a word with `!` to exclude: `core !test`.
 | `SPC p f` | Find file in project        |
 | `SPC p p` | Switch project, then find file |
 | `SPC p e` | Reload `.env` after editing it  |
+| `SPC p d` | Remove a project from the list (choose it) |
+| `SPC p c` | Clean up: projects whose folder is gone, temp folders, package sources |
 
 A project = the git repo of the current file. Get in by opening any file in it,
 via `SPC p p`, or `emacsclient -c ~/path/to/repo`. Add all repos under a folder at once:
-`M-x project-remember-projects-under`.
+`M-x project-remember-projects-under`. Temp folders and package sources are never added,
+and projects whose folder was deleted (e.g. a removed worktree) drop out at startup.
 
 `.env` in the project root is loaded automatically, per project: the REPL (`, c j`),
 LSP, `run-python` and `compile` all see those variables. Other projects don't.
@@ -191,17 +194,35 @@ Tip: in error (stacktrace) buffers press `q` to close.
 
 ## Python
 
-LSP: pyright. REPL: python3. Same `,` layout as Clojure.
+LSP: pyright (types, completion) + Ruff (lint, quick fixes, imports, formatting).
+A project's `.venv` (as `uv` creates it) is used automatically: LSP, REPL, tests,
+`manage.py` and the terminal all run its Python. No activating needed.
+Same `,` layout as Clojure.
 
-| Keys    | Action                                  |
-|---------|-----------------------------------------|
-| `, c j` | Start Python REPL                       |
-| `, e e` | Send statement (visual: selection)      |
-| `, e r` | Send function / class                   |
-| `, e b` | Send buffer                             |
-| `, l g` | Go to REPL                              |
+| Keys      | Action                                          |
+|-----------|-------------------------------------------------|
+| `, c j`   | Start Python REPL                               |
+| `, e e`   | Send statement (visual: selection)              |
+| `, e r`   | Send function / class                           |
+| `, e b`   | Send buffer                                     |
+| `, l g`   | Go to REPL                                      |
+| `, t c`   | Run the test under the cursor (pytest)          |
+| `, t n`   | Run this test file                              |
+| `, t a`   | pytest menu: all tests, options                 |
+| `, t f`   | Rerun failed tests                              |
+| `, t r`   | Repeat last test run                            |
+| `SPC c f` | Format with Ruff                                |
+| `SPC c a` | Quick fix (remove unused import, sort imports, ...) |
 
-Tip: activate your virtualenv before starting Emacs, or pyright won't find packages.
+### Django
+
+| Keys    | Action                                                       |
+|---------|--------------------------------------------------------------|
+| `, d m` | Pick a `manage.py` command (migrate, makemigrations, ...)    |
+| `, d r` | `runserver` in a terminal at the bottom (`SPC b d` stops it) |
+| `, d s` | Django shell as the REPL (`, e e` etc. send code into it)    |
+
+Templates (`templates/**/*.html`): `{% %}` / `{{ }}` highlighting, Emmet with `C-j`.
 
 ---
 

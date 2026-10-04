@@ -16,7 +16,7 @@ User-facing key reference: `KEYS.md`. This file is for whoever changes the confi
 | `rass/slow-start.py` | Parked rass preset (see Tailwind below) |
 | `eat-terminfo/` | Generated: eat terminfo compiled for macOS (git-ignored) |
 | `parinfer-rust/` | Downloaded parinfer library (git-ignored, see Clojure gotchas) |
-| `tree-sitter/` | Bash grammar, compiled on first start by `init-shell.el` (git-ignored) |
+| `tree-sitter/` | Bash + Python grammars, compiled on first start (git-ignored) |
 
 Git tracks only the config and docs; packages, caches and personal state are in `.gitignore`.
 New machine: clone, start Emacs once (installs packages), then build the vterm module and
@@ -33,6 +33,8 @@ New topic: add `lisp/init-foo.el`, add `(require 'init-foo)` to `init.el`, docum
   - `,` = local leader for language commands, bound per mode in each language file.
   - which-key labels for `,` groups are per major mode (`init-ui.el`), never global,
     otherwise Markdown showed Clojure labels.
+- Bind menu keys with a label for which-key: `(kbd "<leader>gg") '("Git status" . magit-status)`.
+  Emacs runs the command; which-key shows the label instead of the function name.
 - Own functions are prefixed `my/`.
 - `use-package` with `:ensure t` by default (`init-packages.el`). Built-ins use `:ensure nil`.
 - Language servers start via `(my/eglot-if "binary")`: only when installed.
@@ -110,6 +112,16 @@ Don't claim a change works without running it. Patterns that worked:
   crashed the macOS JVM).
 - vterm starts its shell before that hook runs: `my/vterm-in` passes `.env` explicitly.
 
+**Python (`init-python.el`, venv in `init-env.el`)**
+- LSP = `rass -- pyright-langserver --stdio -- ruff server` (both start fast, so rass' 3 s
+  timeout is fine here). Formatting goes to Ruff; output equals `ruff format`.
+- `.venv` in the project root is part of the project env (`my/project-env-vars`): sets
+  `VIRTUAL_ENV`, `PATH`, buffer-local `exec-path` and `python-shell-virtualenv-root`.
+- Helpers like `process-lines` run in a temp buffer without the buffer-local `exec-path`:
+  Django commands resolve the venv Python first (`my/django-python`) and use its full path.
+- `python-mode` is remapped to `python-ts-mode`; keys go on `python-base-mode-map`.
+- `treesit-language-source-alist` needs `(require 'treesit)` before `add-to-list`.
+
 **Dired (`init-dired.el`)**
 - In the user's shell `ls` is eza; Dired must use GNU ls, so `insert-directory-program` is
   set to `gls` (coreutils) for `--group-directories-first`.
@@ -183,6 +195,6 @@ Don't claim a change works without running it. Patterns that worked:
 
 Homebrew: `clojure-lsp` (native), `pyright`, `marksman`, `pandoc`, `asciidoctor`, `cmake`,
 `libvterm`, `JetBrains Mono Nerd Font` (cask). npm: `vscode-langservers-extracted`,
-`@tailwindcss/language-server`, `bash-language-server`. Homebrew also: `shellcheck`, `shfmt`. uv: `rassumfrassum`. Optional: `yaml-language-server`.
+`@tailwindcss/language-server`, `bash-language-server`. Homebrew also: `shellcheck`, `shfmt`, `ruff`. uv: `rassumfrassum`. Optional: `yaml-language-server`.
 Linear API key and the Forge GitHub token live in the macOS Keychain (`security add-internet-password -a apikey
 -s api.linear.app -w <KEY>`), never in this repo.

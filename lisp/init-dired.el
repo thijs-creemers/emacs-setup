@@ -21,8 +21,8 @@
   :custom (wdired-allow-to-change-permissions t)
   :config
   (evil-define-key 'normal wdired-mode-map
-    (kbd "<localleader>,") #'wdired-finish-edit
-    (kbd "<localleader>k") #'wdired-abort-changes))
+    (kbd "<localleader>,") '("Apply renames" . wdired-finish-edit)
+    (kbd "<localleader>k") '("Cancel" . wdired-abort-changes)))
 
 ;; File and folder icons (Nerd Font).
 (use-package nerd-icons-dired

@@ -61,6 +61,34 @@
 ;; SPC p p: pick a project, then go straight to the file finder.
 (setq project-switch-commands #'my/find-file-in-project)
 
+;; ---- Keep the project list (SPC p p) clean ----
+;; Never remember temp folders or package sources; SPC p c removes them plus
+;; projects whose folder is gone. Gone folders are also dropped at startup.
+(defvar my/project-ignore-regexp
+  (rx (or (seq bos (or "/tmp/" "/private/tmp/" "/var/folders/" "/private/var/folders/"))
+          "/.emacs.d/elpa/"))
+  "Project roots matching this are not added to the project list.")
+
+(defun my/project-ignored-p (root)
+  (string-match-p my/project-ignore-regexp (expand-file-name root)))
+
+(define-advice project-remember-project (:around (orig project &rest args) skip-ignored)
+  (unless (my/project-ignored-p (project-root project))
+    (apply orig project args)))
+
+(defun my/project-cleanup ()
+  "Forget projects whose folder is gone, temp folders and package sources."
+  (interactive)
+  (let ((before (length (project-known-project-roots))))
+    (project-forget-zombie-projects)
+    (dolist (root (project-known-project-roots))
+      (when (my/project-ignored-p root) (project-forget-project root)))
+    (message "Project list: removed %d, %d left"
+             (- before (length (project-known-project-roots)))
+             (length (project-known-project-roots)))))
+
+(add-hook 'emacs-startup-hook #'project-forget-zombie-projects)
+
 ;; Popup completion while typing code; gets candidates from LSP/cider.
 (use-package corfu
   :custom

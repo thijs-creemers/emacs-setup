@@ -7,41 +7,41 @@
   ;; "," = Clojure commands, same keys as Conjure in nvim.
   (evil-define-key 'normal clojure-mode-map
     ;; connect
-    (kbd "<localleader>cj") #'cider-jack-in-clj    ; start REPL
-    (kbd "<localleader>cJ") #'cider-jack-in-cljs
-    (kbd "<localleader>cs") #'cider-connect-clj    ; connect to running nREPL
-    (kbd "<localleader>cd") #'cider-quit
+    (kbd "<localleader>cj") '("Start REPL (jack in)" . cider-jack-in-clj)    ; start REPL
+    (kbd "<localleader>cJ") '("Start ClojureScript REPL" . cider-jack-in-cljs)
+    (kbd "<localleader>cs") '("Connect to nREPL" . cider-connect-clj)    ; connect to running nREPL
+    (kbd "<localleader>cd") '("Disconnect REPL" . cider-quit)
     ;; eval
-    (kbd "<localleader>ee") #'cider-eval-list-at-point     ; current form
-    (kbd "<localleader>er") #'cider-eval-defun-at-point    ; root (top-level) form
-    (kbd "<localleader>ew") #'cider-eval-sexp-at-point     ; word
-    (kbd "<localleader>eb") #'cider-eval-buffer
-    (kbd "<localleader>en") #'cider-eval-ns-form
+    (kbd "<localleader>ee") '("Eval form" . cider-eval-list-at-point)     ; current form
+    (kbd "<localleader>er") '("Eval top-level form" . cider-eval-defun-at-point)    ; root (top-level) form
+    (kbd "<localleader>ew") '("Eval word" . cider-eval-sexp-at-point)     ; word
+    (kbd "<localleader>eb") '("Eval buffer" . cider-eval-buffer)
+    (kbd "<localleader>en") '("Eval ns form" . cider-eval-ns-form)
     ;; log / REPL window
-    (kbd "<localleader>lg") #'cider-switch-to-repl-buffer
-    (kbd "<localleader>lq") #'my/cider-close-repl-window
+    (kbd "<localleader>lg") '("Go to REPL" . cider-switch-to-repl-buffer)
+    (kbd "<localleader>lq") '("Close REPL window" . my/cider-close-repl-window)
     ;; refresh (runs cider-ns-refresh-before/after-fn from .dir-locals.el)
-    (kbd "<localleader>rr") #'cider-ns-refresh
-    (kbd "<localleader>ra") #'my/cider-refresh-all
-    (kbd "<localleader>rc") #'my/cider-refresh-clear
+    (kbd "<localleader>rr") '("Refresh changed namespaces" . cider-ns-refresh)
+    (kbd "<localleader>ra") '("Refresh all namespaces" . my/cider-refresh-all)
+    (kbd "<localleader>rc") '("Clear cache + refresh" . my/cider-refresh-clear)
     ;; Integrant system in user ns
-    (kbd "<localleader>rs") #'my/system-reset
-    (kbd "<localleader>rg") #'my/system-go
-    (kbd "<localleader>rh") #'my/system-halt
+    (kbd "<localleader>rs") '("(user/reset)" . my/system-reset)
+    (kbd "<localleader>rg") '("(user/go)" . my/system-go)
+    (kbd "<localleader>rh") '("(user/halt)" . my/system-halt)
     ;; tests
-    (kbd "<localleader>tc") #'cider-test-run-test          ; test at cursor
-    (kbd "<localleader>tn") #'cider-test-run-ns-tests
-    (kbd "<localleader>ta") #'cider-test-run-project-tests
-    (kbd "<localleader>tf") #'cider-test-rerun-failed-tests
+    (kbd "<localleader>tc") '("Test at cursor" . cider-test-run-test)          ; test at cursor
+    (kbd "<localleader>tn") '("Tests in namespace" . cider-test-run-ns-tests)
+    (kbd "<localleader>ta") '("All tests" . cider-test-run-project-tests)
+    (kbd "<localleader>tf") '("Rerun failed tests" . cider-test-rerun-failed-tests)
     ;; parinfer
-    (kbd "<localleader>pt") #'parinfer-rust-toggle-disable
-    (kbd "<localleader>pm") #'parinfer-rust-switch-mode
+    (kbd "<localleader>pt") '("Parinfer on / off" . parinfer-rust-toggle-disable)
+    (kbd "<localleader>pm") '("Parinfer mode" . parinfer-rust-switch-mode)
     ;; format (cljfmt via clojure-lsp); whole file: SPC c f
-    (kbd "<localleader>=") #'my/clojure-format-form
+    (kbd "<localleader>=") '("Format form" . my/clojure-format-form)
     ;; docs
     (kbd "K") #'cider-doc)
   (evil-define-key 'visual clojure-mode-map
-    (kbd "<localleader>=") #'eglot-format))           ; format selection
+    (kbd "<localleader>=") '("Format selection" . eglot-format)))           ; format selection
 
 ;; , = : format only the top-level form under the cursor (cljfmt rules),
 ;; so the rest of the file stays untouched.

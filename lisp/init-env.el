@@ -46,18 +46,43 @@
     (when (and (stringp file) (file-readable-p file))
       (my/dotenv-vars file))))
 
+;; Python: a .venv in the project root (as uv creates) is activated the same
+;; way, so LSP, REPL, pytest, compile and the terminal use its Python.
+(defvar my/venv-cache (make-hash-table :test 'equal) "Directory -> .venv dir (or :none).")
+
+(defun my/venv-for-directory (dir)
+  (let ((venv (gethash dir my/venv-cache)))
+    (unless venv
+      (let* ((project (project-current nil dir))
+             (candidate (and project (expand-file-name ".venv" (project-root project)))))
+        (setq venv (if (and candidate (file-directory-p candidate)) candidate :none))
+        (puthash dir venv my/venv-cache)))
+    (and (stringp venv) venv)))
+
+(defun my/project-env-vars (dir)
+  "KEY=VALUE strings for DIR's project: its .venv (if any) plus its .env."
+  (append (when-let ((venv (my/venv-for-directory dir)))
+            (list (concat "VIRTUAL_ENV=" venv)
+                  (format "PATH=%s/bin:%s" venv
+                          (getenv-internal "PATH" (default-value 'process-environment)))))
+          (my/dotenv-for-directory dir)))
+
 (defun my/load-project-dotenv ()
-  "Set this buffer's environment from .env in its project root."
+  "Set this buffer's environment from its project's .env and .venv."
   (unless (string-prefix-p " " (buffer-name))      ; skip internal temp buffers
-    (when-let ((vars (my/dotenv-for-directory default-directory)))
+    (when-let ((vars (my/project-env-vars default-directory)))
       (setq-local process-environment
-                  (append vars (default-value 'process-environment))))))
+                  (append vars (default-value 'process-environment))))
+    (when-let ((venv (my/venv-for-directory default-directory)))
+      (setq-local exec-path (cons (expand-file-name "bin" venv) (default-value 'exec-path)))
+      (setq-local python-shell-virtualenv-root venv))))
 
 (defun my/reload-project-dotenv ()
   "Re-read .env and apply it to all open buffers of the current project."
   (interactive)
   (clrhash my/dotenv-cache)
   (clrhash my/dotenv-file-cache)
+  (clrhash my/venv-cache)
   (dolist (buffer (project-buffers (project-current t)))
     (with-current-buffer buffer (my/load-project-dotenv)))
   (message "Reloaded .env for project"))

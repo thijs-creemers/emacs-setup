@@ -10,10 +10,10 @@
   :config
   ;; "," = AsciiDoc commands.
   (evil-define-key 'normal adoc-mode-map
-    (kbd "<localleader>p") #'my/adoc-preview          ; preview side by side
-    (kbd "<localleader>o") #'my/adoc-open-in-browser
-    (kbd "<localleader>P") #'my/adoc-export-pdf
-    (kbd "<localleader>i") #'consult-imenu))          ; jump to heading
+    (kbd "<localleader>p") '("Preview" . my/adoc-preview)          ; preview side by side
+    (kbd "<localleader>o") '("Open in browser" . my/adoc-open-in-browser)
+    (kbd "<localleader>P") '("Export PDF" . my/adoc-export-pdf)
+    (kbd "<localleader>i") '("Jump to heading" . consult-imenu)))          ; jump to heading
 
 ;; Render to HTML in /tmp. data-uri embeds images, so they still show.
 (defun my/adoc-render-html ()

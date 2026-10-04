@@ -3,8 +3,9 @@
 ;; Bash/sh: tree-sitter colors (variables in strings, commands), LSP with
 ;; ShellCheck checks, completion, K docs, SPC c f formatting (shfmt).
 ;; Zsh (.zshrc, .zsh): sh-mode colors only; no tree-sitter/ShellCheck for zsh.
-(setq treesit-language-source-alist
-      '((bash "https://github.com/tree-sitter/tree-sitter-bash" "v0.21.0")))
+(require 'treesit)
+(add-to-list 'treesit-language-source-alist
+             '(bash "https://github.com/tree-sitter/tree-sitter-bash" "v0.21.0"))
 
 ;; Compile the bash grammar once into ~/.emacs.d/tree-sitter/ (needs cc).
 (defun my/ensure-bash-grammar ()

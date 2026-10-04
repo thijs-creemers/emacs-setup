@@ -63,95 +63,97 @@
 (evil-set-leader '(normal visual) (kbd ",") t)
 
 (evil-define-key 'visual 'global
-  (kbd "<leader>as") #'claude-code-ide-insert-at-mentioned)  ; selection -> Claude
+  (kbd "<leader>as") '("Send selection to Claude" . claude-code-ide-insert-at-mentioned))  ; selection -> Claude
 
 (evil-define-key 'normal 'global
   ;; find (same keys as Telescope in nvim)
-  (kbd "<leader>ff") #'my/find-file-in-project
-  (kbd "<leader>fF") #'find-file
-  (kbd "<leader>fg") #'consult-ripgrep
-  (kbd "<leader>fb") #'consult-buffer
-  (kbd "<leader>fr") #'consult-recent-file
-  (kbd "<leader>fh") #'describe-symbol
-  (kbd "<leader>fd") #'consult-flymake
-  (kbd "<leader>fs") #'consult-imenu
-  (kbd "<leader>/")  #'consult-line
+  (kbd "<leader>ff") '("Find file in project" . my/find-file-in-project)
+  (kbd "<leader>fF") '("Find file by path" . find-file)
+  (kbd "<leader>fg") '("Search text in project" . consult-ripgrep)
+  (kbd "<leader>fb") '("Switch buffer" . consult-buffer)
+  (kbd "<leader>fr") '("Recent files" . consult-recent-file)
+  (kbd "<leader>fh") '("Help on symbol" . describe-symbol)
+  (kbd "<leader>fd") '("Find problems" . consult-flymake)
+  (kbd "<leader>fs") '("Symbols in file" . consult-imenu)
+  (kbd "<leader>/")  '("Search in buffer" . consult-line)
   ;; buffers
-  (kbd "<leader>bb") #'consult-buffer
-  (kbd "<leader>bd") #'my/kill-buffer
-  (kbd "<leader>bs") #'save-buffer
-  (kbd "<leader>bn") #'next-buffer
-  (kbd "<leader>bp") #'previous-buffer
+  (kbd "<leader>bb") '("Switch buffer" . consult-buffer)
+  (kbd "<leader>bd") '("Close buffer" . my/kill-buffer)
+  (kbd "<leader>bs") '("Save" . save-buffer)
+  (kbd "<leader>bn") '("Next buffer" . next-buffer)
+  (kbd "<leader>bp") '("Previous buffer" . previous-buffer)
   (kbd "]b")         #'next-buffer
   (kbd "[b")         #'previous-buffer
   (kbd "L")          #'next-buffer                    ; as in nvim (S-l)
   (kbd "H")          #'previous-buffer                ; as in nvim (S-h)
   ;; project
-  (kbd "<leader>pf") #'my/find-file-in-project
-  (kbd "<leader>pp") #'project-switch-project
-  (kbd "<leader>pe") #'my/reload-project-dotenv
+  (kbd "<leader>pf") '("Find file in project" . my/find-file-in-project)
+  (kbd "<leader>pp") '("Switch project" . project-switch-project)
+  (kbd "<leader>pe") '("Reload .env" . my/reload-project-dotenv)
+  (kbd "<leader>pd") '("Remove project from list" . project-forget-project)        ; remove one from the list
+  (kbd "<leader>pc") '("Clean up project list" . my/project-cleanup)            ; remove gone / temp / package dirs
   ;; windows
-  (kbd "<leader>wv") #'split-window-right
-  (kbd "<leader>ws") #'split-window-below
-  (kbd "<leader>wd") #'delete-window
-  (kbd "<leader>ww") #'other-window
+  (kbd "<leader>wv") '("Split side by side" . split-window-right)
+  (kbd "<leader>ws") '("Split below" . split-window-below)
+  (kbd "<leader>wd") '("Close window" . delete-window)
+  (kbd "<leader>ww") '("Next window" . other-window)
   ;; code (LSP)
-  (kbd "<leader>ca") #'eglot-code-actions
-  (kbd "<leader>cr") #'eglot-rename
-  (kbd "<leader>cf") #'eglot-format-buffer
-  (kbd "<leader>cd") #'flymake-show-buffer-diagnostics
-  (kbd "<leader>cu") #'xref-find-references
+  (kbd "<leader>ca") '("Quick fix / code action" . eglot-code-actions)
+  (kbd "<leader>cr") '("Rename symbol" . eglot-rename)
+  (kbd "<leader>cf") '("Format file" . eglot-format-buffer)
+  (kbd "<leader>cd") '("List problems" . flymake-show-buffer-diagnostics)
+  (kbd "<leader>cu") '("Find usages" . xref-find-references)
   (kbd "]d")         #'flymake-goto-next-error
   (kbd "[d")         #'flymake-goto-prev-error
   ;; git
-  (kbd "<leader>gg") #'magit-status
-  (kbd "<leader>gb") #'magit-blame-addition
-  (kbd "<leader>gf") #'magit-log-buffer-file          ; file history
-  (kbd "<leader>gV") #'my/magit-diff-branch-vs-main
-  (kbd "<leader>gw") #'magit-worktree
-  (kbd "<leader>gs") #'diff-hl-stage-dwim             ; stage hunk
-  (kbd "<leader>gr") #'diff-hl-revert-hunk
-  (kbd "<leader>gp") #'diff-hl-show-hunk              ; preview hunk
+  (kbd "<leader>gg") '("Git status" . magit-status)
+  (kbd "<leader>gb") '("Blame" . magit-blame-addition)
+  (kbd "<leader>gf") '("File history" . magit-log-buffer-file)          ; file history
+  (kbd "<leader>gV") '("Diff branch vs main" . my/magit-diff-branch-vs-main)
+  (kbd "<leader>gw") '("Worktrees" . magit-worktree)
+  (kbd "<leader>gs") '("Stage hunk" . diff-hl-stage-dwim)             ; stage hunk
+  (kbd "<leader>gr") '("Revert hunk" . diff-hl-revert-hunk)
+  (kbd "<leader>gp") '("Preview hunk" . diff-hl-show-hunk)              ; preview hunk
   ;; GitHub (Forge + gh)
-  (kbd "<leader>gP") #'forge-list-pullreqs            ; PRs of this repo
-  (kbd "<leader>gI") #'forge-list-issues
-  (kbd "<leader>gn") #'forge-create-pullreq           ; new PR from this branch
-  (kbd "<leader>go") #'forge-browse                   ; open in browser
-  (kbd "<leader>gc") #'my/gh-pr-checks                ; CI status (live)
+  (kbd "<leader>gP") '("Pull requests" . forge-list-pullreqs)            ; PRs of this repo
+  (kbd "<leader>gI") '("Issues" . forge-list-issues)
+  (kbd "<leader>gn") '("New pull request" . forge-create-pullreq)           ; new PR from this branch
+  (kbd "<leader>go") '("Open in browser" . forge-browse)                   ; open in browser
+  (kbd "<leader>gc") '("CI checks (live)" . my/gh-pr-checks)                ; CI status (live)
   (kbd "]h")         #'diff-hl-next-hunk
   (kbd "[h")         #'diff-hl-previous-hunk
   ;; open / tasks
-  (kbd "<leader>ot") #'my/vterm-project               ; terminal in project root
-  (kbd "<leader>oT") #'my/vterm-here                  ; terminal here
-  (kbd "<leader>od") #'dired-jump                     ; folder of this file
-  (kbd "<leader>oD") #'my/dired-project-root
-  (kbd "<leader>ou") #'browse-url                     ; open URL (default: at cursor)
-  (kbd "<leader>tb") #'my/bb-task
+  (kbd "<leader>ot") '("Terminal (project root)" . my/vterm-project)               ; terminal in project root
+  (kbd "<leader>oT") '("Terminal (this folder)" . my/vterm-here)                  ; terminal here
+  (kbd "<leader>od") '("Files: this folder" . dired-jump)                     ; folder of this file
+  (kbd "<leader>oD") '("Files: project root" . my/dired-project-root)
+  (kbd "<leader>ou") '("Open URL" . browse-url)                     ; open URL (default: at cursor)
+  (kbd "<leader>tb") '("Run bb task" . my/bb-task)
   ;; Claude Code
-  (kbd "<leader>ac") #'my/claude-toggle                    ; start / show / hide
-  (kbd "<leader>af") #'claude-code-ide-switch-to-buffer    ; focus Claude
-  (kbd "<leader>ap") #'claude-code-ide-send-prompt         ; prompt from minibuffer
-  (kbd "<leader>am") #'claude-code-ide-menu                ; all commands
-  (kbd "<leader>ar") #'claude-code-ide-resume              ; resume old conversation
-  (kbd "<leader>aC") #'claude-code-ide-continue            ; continue last one
-  (kbd "<leader>ae") #'claude-code-ide-send-escape         ; interrupt Claude
-  (kbd "<leader>aq") #'claude-code-ide-stop
-  (kbd "<leader>ax") #'claude-code-ide-clear-selection  ; drop file/selection from prompt
-  (kbd "<leader>aa") #'my/claude-accept-diff
-  (kbd "<leader>ad") #'my/claude-deny-diff
+  (kbd "<leader>ac") '("Claude: show / hide" . my/claude-toggle)                    ; start / show / hide
+  (kbd "<leader>af") '("Focus Claude" . claude-code-ide-switch-to-buffer)    ; focus Claude
+  (kbd "<leader>ap") '("Prompt Claude" . claude-code-ide-send-prompt)         ; prompt from minibuffer
+  (kbd "<leader>am") '("Claude menu" . claude-code-ide-menu)                ; all commands
+  (kbd "<leader>ar") '("Resume conversation" . claude-code-ide-resume)              ; resume old conversation
+  (kbd "<leader>aC") '("Continue last conversation" . claude-code-ide-continue)            ; continue last one
+  (kbd "<leader>ae") '("Interrupt Claude" . claude-code-ide-send-escape)         ; interrupt Claude
+  (kbd "<leader>aq") '("Stop Claude" . claude-code-ide-stop)
+  (kbd "<leader>ax") '("Drop file/selection from context" . claude-code-ide-clear-selection)  ; drop file/selection from prompt
+  (kbd "<leader>aa") '("Accept change" . my/claude-accept-diff)
+  (kbd "<leader>ad") '("Reject change" . my/claude-deny-diff)
   ;; Linear
-  (kbd "<leader>ll") #'linear-emacs-list-issues
-  (kbd "<leader>lp") #'linear-emacs-list-issues-by-project
-  (kbd "<leader>ln") #'linear-emacs-new-issue
-  (kbd "<leader>ls") #'my/linear-show-ticket          ; find + view one ticket
-  (kbd "<leader>lc") #'my/linear-add-comment          ; comment on a ticket
+  (kbd "<leader>ll") '("My issues" . linear-emacs-list-issues)
+  (kbd "<leader>lp") '("Issues of a project" . linear-emacs-list-issues-by-project)
+  (kbd "<leader>ln") '("New issue" . linear-emacs-new-issue)
+  (kbd "<leader>ls") '("Find ticket" . my/linear-show-ticket)          ; find + view one ticket
+  (kbd "<leader>lc") '("Comment on ticket" . my/linear-add-comment)          ; comment on a ticket
   ;; help
-  (kbd "<leader>hk") #'my/open-keys-cheatsheet
-  (kbd "<leader>hr") #'my/reload-config
-  (kbd "<leader>hf") #'describe-function
-  (kbd "<leader>hv") #'describe-variable
-  (kbd "<leader>hb") #'describe-key
+  (kbd "<leader>hk") '("Cheatsheet (KEYS.md)" . my/open-keys-cheatsheet)
+  (kbd "<leader>hr") '("Reload config" . my/reload-config)
+  (kbd "<leader>hf") '("Describe function" . describe-function)
+  (kbd "<leader>hv") '("Describe variable" . describe-variable)
+  (kbd "<leader>hb") '("What does this key do?" . describe-key)
   ;; quit
-  (kbd "<leader>qq") #'save-buffers-kill-terminal)
+  (kbd "<leader>qq") '("Quit" . save-buffers-kill-terminal))
 
 (provide 'init-evil)
