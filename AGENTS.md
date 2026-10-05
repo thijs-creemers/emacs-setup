@@ -165,6 +165,9 @@ Don't claim a change works without running it. Patterns that worked:
 - Its sync handles one ticket only when `this-command` is `org-todo`; otherwise it walks
   the whole file. `my/org-todo-choose` (`, t`) binds it accordingly.
 - `org-todo` with `C-u` means "log note" in Org 9.7, not "choose state".
+- Don't bind `linear-emacs-list-issues-by-project`: it shows nothing, fetches only *my*
+  tickets and overwrites linear.org. `SPC l p` is `my/linear-project-board` (own buffer,
+  all open tickets via `project.issues` filtered on state type started/unstarted/backlog).
 
 **Forge (GitHub PRs/issues)**
 - Forge does not use `gh`; it reads a token from the Keychain (`auth-sources` is set in

@@ -139,8 +139,12 @@
                  (or (cdr (assoc choice table)) (user-error "No ticket chosen"))))))))
 
 (defun my/linear--ticket-at-point ()
-  "Ticket number of the ticket view, or of the linear.org heading at point."
+  "Ticket number of the ticket view, project board line, or linear.org heading."
   (or (bound-and-true-p my/linear-ticket-id)
+      (and (bound-and-true-p my/linear-board-mode)
+           (save-excursion (beginning-of-line)
+                           (and (re-search-forward "\\_<[A-Z]+-[0-9]+\\_>" (line-end-position) t)
+                                (match-string 0))))
       (and (derived-mode-p 'org-mode) (org-entry-get nil "ID-LINEAR"))))
 
 (defconst my/linear--issue-query
@@ -252,5 +256,121 @@
   (evil-define-key 'normal org-mode-map (kbd "<localleader>v") '("Show ticket" . my/linear-show-ticket-at-point)))
 (keymap-set my/linear-comment-mode-map "C-c C-c" #'my/linear-comment-send)
 (keymap-set my/linear-comment-mode-map "C-c C-k" #'my/linear-comment-cancel)
+
+;; ---- Project board (SPC l p): all open tickets of one project, by status ----
+;; Separate buffer; linear.org (my own tickets) is left alone.
+(defconst my/linear--board-query
+  "query($id: String!) { project(id: $id) { name url
+     issues(first: 250, filter: { state: { type: { in: [\"started\", \"unstarted\", \"backlog\"] } } }) {
+       nodes { identifier title priority priorityLabel state { name type } assignee { name isMe } } } } }")
+
+;; The board keeps the fetched project, so , a (assignee) refilters without a request.
+(defvar-local my/linear-board-project-id nil)
+(defvar-local my/linear-board-url nil)
+(defvar-local my/linear-board-data nil "Fetched project (name, url, issues).")
+(defvar-local my/linear-board-filter "All" "\"All\", \"Me\", \"Unassigned\" or a name.")
+(define-minor-mode my/linear-board-mode "Keys in a Linear project board." :keymap (make-sparse-keymap))
+
+(defun my/linear--assignee (issue)
+  "\"Me\", \"Unassigned\" or the assignee's name."
+  (let ((assignee (cdr (assoc 'assignee issue))))
+    (cond ((null assignee) "Unassigned")
+          ((eq t (cdr (assoc 'isMe assignee))) "Me")
+          (t (cdr (assoc 'name assignee))))))
+
+(defun my/linear--board-issues (project &optional filter)
+  (let ((issues (append (my/linear--get project 'issues 'nodes) nil)))
+    (if (member filter '(nil "All")) issues
+      (seq-filter (lambda (i) (equal (my/linear--assignee i) filter)) issues))))
+
+(defun my/linear--choose-assignee (project)
+  "Ask who: All, Me, Unassigned, then everyone with tickets (with counts)."
+  (let* ((counts (mapcar (lambda (g) (cons (car g) (length (cdr g))))
+                         (seq-group-by #'my/linear--assignee (my/linear--board-issues project))))
+         (others (sort (seq-remove (lambda (n) (member n '("Me" "Unassigned"))) (mapcar #'car counts))
+                       #'string<))
+         (names (append '("All") (seq-filter (lambda (n) (assoc n counts)) '("Me" "Unassigned")) others))
+         (table (mapcar (lambda (n) (cons (format "%s (%d)" n (if (equal n "All")
+                                                                  (apply #'+ (mapcar #'cdr counts))
+                                                                (cdr (assoc n counts))))
+                                         n))
+                        names)))
+    (cdr (assoc (completing-read "Assignee: " table nil t) table))))
+
+(defun my/linear--board-line (issue)
+  (format "- %-9s %s  /%s · %s/\n" (cdr (assoc 'identifier issue)) (cdr (assoc 'title issue))
+          (downcase (my/linear--assignee issue)) (cdr (assoc 'priorityLabel issue))))
+
+(defun my/linear--board-content (project filter)
+  "PROJECT's open issues for FILTER as Org: In Progress first, then Todo, then Backlog."
+  (let* ((type-rank '(("started" . 0) ("unstarted" . 1) ("backlog" . 2)))
+         (issues (my/linear--board-issues project filter))
+         (groups (seq-sort-by
+                  (lambda (g) (cdr (assoc (my/linear--get (cadr g) 'state 'type) type-rank))) #'<
+                  (seq-group-by (lambda (i) (my/linear--get i 'state 'name)) issues))))
+    (concat
+     (format "#+title: %s\n" (cdr (assoc 'name project)))
+     (format "Assignee: %s — %d of %d open tickets\n" filter (length issues)
+             (length (my/linear--board-issues project)))
+     "RET / , v show ticket   , a assignee   , c comment   , r refresh   , o browser   q close\n\n"
+     (if groups "" "No open tickets.\n")
+     (mapconcat
+      (lambda (g)
+        (concat (format "* %s (%d)\n" (car g) (length (cdr g)))
+                (mapconcat #'my/linear--board-line
+                           ;; urgent first; "no priority" (0) last
+                           (seq-sort-by (lambda (i) (let ((p (cdr (assoc 'priority i)))) (if (eq p 0) 5 p)))
+                                        #'< (cdr g))
+                           "")))
+      groups ""))))
+
+(defun my/linear--board-render ()
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (insert (my/linear--board-content my/linear-board-data my/linear-board-filter))
+    (goto-char (point-min))))
+
+(defun my/linear-project-board (project-id &optional filter)
+  "Show open tickets of a project, grouped by status, for one assignee or all."
+  (interactive
+   (progn (require 'linear-emacs)
+          (let* ((team (linear-emacs-select-team))
+                 (project (and team (linear-emacs-select-project (cdr (assoc 'id team))))))
+            (list (or (cdr (assoc 'id project)) (user-error "No project chosen"))))))
+  (let* ((project (my/linear--get (my/linear--query my/linear--board-query `(("id" . ,project-id))) 'project))
+         (filter (or filter (my/linear--choose-assignee project)))
+         (buf (get-buffer-create (format "*Linear: %s*" (cdr (assoc 'name project))))))
+    (with-current-buffer buf
+      (org-mode)
+      (setq my/linear-board-project-id project-id
+            my/linear-board-url (cdr (assoc 'url project))
+            my/linear-board-data project
+            my/linear-board-filter filter)
+      (my/linear--board-render)
+      (setq buffer-read-only t)
+      (my/linear-board-mode 1)
+      (evil-normalize-keymaps))
+    (pop-to-buffer buf)))
+
+(defun my/linear-board-assignee ()
+  "Show the board for another assignee (no new request)."
+  (interactive)
+  (setq my/linear-board-filter (my/linear--choose-assignee my/linear-board-data))
+  (my/linear--board-render))
+
+(defun my/linear-board-refresh ()
+  (interactive)
+  (my/linear-project-board my/linear-board-project-id my/linear-board-filter))
+(defun my/linear-board-browse () (interactive) (browse-url my/linear-board-url))
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal my/linear-board-mode-map
+    (kbd "RET") '("Show ticket" . my/linear-show-ticket-at-point)
+    (kbd "<localleader>v") '("Show ticket" . my/linear-show-ticket-at-point)
+    (kbd "<localleader>a") '("Choose assignee" . my/linear-board-assignee)
+    (kbd "<localleader>c") '("Comment" . my/linear-add-comment)
+    (kbd "<localleader>r") '("Refresh" . my/linear-board-refresh)
+    (kbd "<localleader>o") '("Open project in browser" . my/linear-board-browse)
+    "q" #'quit-window))
 
 (provide 'init-linear)

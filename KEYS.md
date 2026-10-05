@@ -445,7 +445,7 @@ In the Claude window all of Claude's own shortcuts work: `Esc` (interrupt), `Esc
 | Keys      | Action                                  |
 |-----------|-----------------------------------------|
 | `SPC l l` | My open issues (Org file `~/org/linear.org`) |
-| `SPC l p` | Issues of one project                   |
+| `SPC l p` | Project board: pick team, project and assignee (All / Me / Unassigned / a person) |
 | `SPC l n` | New issue                               |
 | `SPC l s` | Find one ticket and show it (Markdown: details, description, comments) |
 | `SPC l c` | Comment on a ticket (the one you view / stand on, else asks) |
@@ -460,6 +460,11 @@ Done / Canceled groups start folded. `SPC l l` again refreshes and regroups.
 Finding a ticket (`SPC l s`): type to filter your own tickets (number or title words),
 or type a number like `BOU-123` for any ticket, or words + `M-RET` to search all of Linear.
 In a ticket view: `, c` comment, `, r` refresh, `, o` open in browser, `q` close.
+Project board: grouped In Progress / In Review, Todo, Backlog (urgent first); each line shows
+the assignee (`me`, a name, or `unassigned`). The assignee list shows counts, e.g. `Me (15)`.
+`RET` or `, v` shows the ticket on that line, `, a` switches assignee (no reload), `, c`
+comments, `, r` refreshes (keeps the assignee), `, o` opens the project in the browser, `q` closes.
+Your own list (`SPC l l`, linear.org) is not touched by the board.
 Writing a comment (Markdown): `Esc`, then `, ,` send or `, k` cancel.
 Setup once, API key from Linear settings > Security & access:
 `security add-internet-password -a apikey -s api.linear.app -w <KEY>`

@@ -143,7 +143,7 @@
   (kbd "<leader>ad") '("Reject change" . my/claude-deny-diff)
   ;; Linear
   (kbd "<leader>ll") '("My issues" . linear-emacs-list-issues)
-  (kbd "<leader>lp") '("Issues of a project" . linear-emacs-list-issues-by-project)
+  (kbd "<leader>lp") '("Project board" . my/linear-project-board)
   (kbd "<leader>ln") '("New issue" . linear-emacs-new-issue)
   (kbd "<leader>ls") '("Find ticket" . my/linear-show-ticket)          ; find + view one ticket
   (kbd "<leader>lc") '("Comment on ticket" . my/linear-add-comment)          ; comment on a ticket
