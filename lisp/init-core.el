@@ -54,7 +54,7 @@
     (load file nil 'nomessage))
   (message "Config reloaded"))
 
-;; SPC b d. Previews (eww) and terminals also close their window.
+;; SPC b d. Previews (eww) and terminals also close their window; Claude is only hidden.
 ;; Killing a markdown/asciidoc file closes its preview too.
 (defun my/kill-buffer-and-window (buffer)
   (dolist (window (get-buffer-window-list buffer nil t))
@@ -69,6 +69,10 @@
       (when (eq (buffer-local-value 'major-mode buffer) 'eww-mode)
         (my/kill-buffer-and-window buffer))))
   (cond
+   ((bound-and-true-p claude-code-ide--session)    ; Claude: only hide, keep it running
+    (dolist (window (get-buffer-window-list nil nil t))
+      (unless (ignore-errors (delete-window window) t)
+        (switch-to-prev-buffer window 'bury))))
    ((derived-mode-p 'eww-mode)
     (my/kill-buffer-and-window (current-buffer)))
    ((derived-mode-p 'vterm-mode 'eat-mode)         ; terminal: no confirm prompt

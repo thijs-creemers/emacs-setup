@@ -67,7 +67,7 @@
   (when (derived-mode-p 'vterm-mode)
     (my/claude-term-mode 1)
     (setq header-line-format
-          " Ctrl-Z: Emacs keys  ·  then SPC a c hide · C-w h other window · SPC b d close · i back to Claude")
+          " Ctrl-Z: Emacs keys  ·  then SPC a c hide · C-w h other window · SPC b d hide (keeps running) · i back to Claude")
     (evil-normalize-keymaps)))
 
 (advice-add 'claude-code-ide--setup-terminal-keybindings :after #'my/claude-term-setup)

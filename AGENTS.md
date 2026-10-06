@@ -86,6 +86,8 @@ Don't claim a change works without running it. Patterns that worked:
 - elpa.gnu.org / elpa.nongnu.org can be unreachable (timeouts) while MELPA works: cider
   (dep `queue`), rainbow-mode and eat then fail to install. `init-packages.el` uses the
   d12frosted GitHub mirror (unsigned, so `package-check-signature nil`) until then.
+- Native-compile warnings (`*Warnings*` after installing cider etc.) are package bugs;
+  `early-init.el` silences them (`native-comp-async-report-warnings-errors`).
 - `exec-path-from-shell` must run on every macOS start, including the daemon, or Homebrew
   tools (pandoc, clojure-lsp, ...) are not found.
 
@@ -144,6 +146,7 @@ Don't claim a change works without running it. Patterns that worked:
   uses its own category `project-finder`: Emacs 30's project *picker* also uses
   `project-file`, so that category would split the picker too.
 - Preview buffers (eww) and terminals close with `SPC b d` via `my/kill-buffer`.
+  Claude buffers are only hidden: killing one sends SIGHUP ("exited with error code 129").
 
 **Terminal**
 - vterm is the main terminal (30× faster than eat). Its module is built against Homebrew's

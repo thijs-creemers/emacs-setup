@@ -469,7 +469,7 @@ In the Claude window all of Claude's own shortcuts work: `Esc` (interrupt), `Esc
 search with `/`; `i` jumps back to the prompt. After a window resize, part of the
 conversation may appear twice in the history (as in other terminals).
 **`Ctrl-Z`** (or `Ctrl-\`) is the way out: it switches to vim normal mode, so `SPC a c`
-(hide), `C-w h` (other window), `SPC b d` (close) work. `i` = back to typing to Claude.
+(hide), `C-w h` (other window), `SPC b d` (hide; Claude keeps running, stop with `SPC a q`) work. `i` = back to typing to Claude.
 `Esc` does *not* leave: it goes to Claude (interrupt). The window's top line shows this.
 
 ---
