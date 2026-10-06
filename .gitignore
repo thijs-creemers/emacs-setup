@@ -18,6 +18,8 @@
 /transient/
 /url/
 /request/
+/.cache/
+/forge-database.sqlite*
 /custom.el
 
 # Local backup of the original Emacs Client.app

@@ -9,7 +9,10 @@
   (vterm-always-compile-module t)      ; compile without asking
   (vterm-max-scrollback 10000)
   (vterm-kill-buffer-on-exit t)
-  :config (evil-set-initial-state 'vterm-mode 'insert))
+  :config
+  (evil-set-initial-state 'vterm-mode 'insert)
+  ;; Cmd-V pastes the clipboard (as a real terminal paste, also into Claude).
+  (evil-define-key '(insert normal) vterm-mode-map (kbd "M-v") #'vterm-yank))
 
 ;; Open vterm in DIR. Passes the project's .env explicitly: vterm starts
 ;; the shell before the .env hook (init-env.el) would run.

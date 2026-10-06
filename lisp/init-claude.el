@@ -35,8 +35,8 @@
 (defun my/claude-deny-diff ()   "Reject Claude's change." (interactive) (my/claude-diff-quit nil))
 
 ;; ---- Claude window: Claude's own keys win (Esc, C-c, S-Tab, C-r, C-o, ...) ----
-;; Only C-\ is kept for Emacs: it switches to vim normal mode, so SPC a c,
-;; C-w h, SPC b d work again; i goes back to typing to Claude.
+;; Only C-z / C-\ are kept for Emacs: vim normal mode, so SPC a c, C-w h,
+;; SPC b d work again; i goes back to typing to Claude. A header line says so.
 (defvar my/claude-passthrough-keys
   '("C-c" "C-d" "C-r" "C-o" "C-t" "C-l" "C-v" "C-b" "C-g" "C-j" "C-k" "C-u" "C-y"
     "C-a" "C-e" "C-w" "C-n" "C-p" "C-f" "C-s" "C-_" "TAB" "M-p" "M-t" "M-b" "M-f")
@@ -59,14 +59,36 @@
   (evil-define-key 'insert my/claude-term-mode-map
     (kbd "<escape>") #'vterm-send-escape
     (kbd "<backtab>") #'my/claude-send-shift-tab
+    (kbd "C-z") #'evil-normal-state
     (kbd "C-\\") #'evil-normal-state))
 
 ;; The package sets up every new Claude window here; switch our mode on too.
 (defun my/claude-term-setup (&rest _)
   (when (derived-mode-p 'vterm-mode)
     (my/claude-term-mode 1)
+    (setq header-line-format
+          " Ctrl-Z: Emacs keys  ·  then SPC a c hide · C-w h other window · SPC b d close · i back to Claude")
     (evil-normalize-keymaps)))
 
 (advice-add 'claude-code-ide--setup-terminal-keybindings :after #'my/claude-term-setup)
+
+;; Scrollback: Claude redraws with "clear screen" (ESC[2J). libvterm erases the
+;; screen, so earlier output was lost; real terminals push it into scrollback.
+;; Do the same in Claude windows: scroll the screen up first, drop ESC[3J.
+(defun my/claude-keep-scrollback (orig proc input)
+  (let ((buf (process-buffer proc)))
+    (when (and (buffer-live-p buf) (string-prefix-p "*claude-code[" (buffer-name buf))
+               (string-search "\033[" input))
+      (let* ((win (get-buffer-window buf t))
+             (rows (if win (window-body-height win) 0))
+             (scroll-up (concat (format "\033[%d;1H" rows) (make-string rows ?\n) "\033[H")))
+        (setq input (string-replace "\033[3J" "" input))
+        (when (> rows 0)
+          (setq input (string-replace "\033[2J" scroll-up input)))))
+    (funcall orig proc input)))
+
+(with-eval-after-load 'vterm
+  ;; depth -90: run before claude-code-ide's anti-flicker advice queues the output
+  (advice-add 'vterm--filter :around #'my/claude-keep-scrollback '((depth . -90))))
 
 (provide 'init-claude)

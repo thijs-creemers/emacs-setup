@@ -1,11 +1,21 @@
 ;;; init-asciidoc.el --- AsciiDoc  -*- lexical-binding: t; -*-
 
+;; Headings for SPC f s / , i: adoc-mode's nested index returns nothing, so
+;; use its flat list, indented per level to show the structure.
+(defun my/adoc-imenu-index ()
+  (mapcar (lambda (item)
+            (cons (concat (make-string (* 2 (adoc--imenu-heading-level nil (cdr item))) ?\s)
+                          (substring-no-properties (car item)))
+                  (cdr item)))
+          (adoc-imenu-create-index)))
+
 ;; Rendering uses asciidoctor / asciidoctor-pdf (brew install asciidoctor).
 (use-package adoc-mode
   :mode ("\\.a\\(?:sc\\)?doc\\'" . adoc-mode)
   :hook (adoc-mode . (lambda ()
                        (visual-line-mode 1)       ; wrap long lines at words
                        (display-line-numbers-mode 1)
+                       (setq-local imenu-create-index-function #'my/adoc-imenu-index)
                        (add-hook 'after-save-hook #'my/adoc-refresh-preview nil t)))
   :config
   ;; "," = AsciiDoc commands.

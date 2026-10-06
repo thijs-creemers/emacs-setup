@@ -89,6 +89,28 @@
 
 (add-hook 'emacs-startup-hook #'project-forget-zombie-projects)
 
+;; Embark: actions on the highlighted item in any list. C-. = action menu
+;; (open in split, copy path, delete file, ...). Kill buffer keeps the list open.
+(use-package embark
+  :bind (("C-." . embark-act))
+  :custom (embark-quit-after-action '((kill-buffer . nil) (t . t))))
+
+(use-package embark-consult
+  :after (embark consult))
+
+;; C-d in a buffer list (SPC b b): close the highlighted buffer, list refreshes.
+;; In other prompts C-d stays "delete character".
+(defun my/vertico-kill-buffer ()
+  (interactive)
+  (require 'embark)
+  (let ((target (car (embark--targets))))
+    (if (eq (plist-get target :type) 'buffer)
+        (progn (kill-buffer (plist-get target :target))  ; Embark gives the clean name
+               (embark--restart))                         ; reopen list, same input
+      (call-interactively #'delete-char))))
+
+(keymap-set vertico-map "C-d" #'my/vertico-kill-buffer)
+
 ;; Popup completion while typing code; gets candidates from LSP/cider.
 (use-package corfu
   :custom

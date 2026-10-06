@@ -23,6 +23,7 @@
 (require 'init-css)         ; css/scss + LSP + color preview
 (require 'init-git)         ; magit + diff-hl
 (require 'init-dired)       ; file manager: move, rename, delete
+(require 'init-tree)        ; project tree sidebar (treemacs)
 (require 'init-term)        ; vterm terminal + bb tasks
 (require 'init-linear)      ; Linear issues in Org
 (require 'init-claude)      ; Claude Code CLI (claude-code-ide)

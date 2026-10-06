@@ -30,6 +30,10 @@
   (setq mac-command-modifier 'meta
         mac-option-modifier 'none))
 
+;; Cmd-V paste / Cmd-C copy selection, like other Mac apps (also in prompts).
+(keymap-global-set "M-v" #'yank)
+(keymap-global-set "M-c" #'kill-ring-save)
+
 ;; Secrets (Linear key, GitHub token for Forge) live in the macOS Keychain as
 ;; *internet* passwords: Emacs matches -s (server) and -a (account) there.
 ;; (For generic passwords it matches -c, so `add-generic-password -s` isn't found.)

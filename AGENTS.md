@@ -17,6 +17,7 @@ User-facing key reference: `KEYS.md`. This file is for whoever changes the confi
 | `eat-terminfo/` | Generated: eat terminfo compiled for macOS (git-ignored) |
 | `parinfer-rust/` | Downloaded parinfer library (git-ignored, see Clojure gotchas) |
 | `tree-sitter/` | Bash + Python grammars, compiled on first start (git-ignored) |
+| `.cache/` | Treemacs state (git-ignored) |
 
 Git tracks only the config and docs; packages, caches and personal state are in `.gitignore`.
 New machine: clone, start Emacs once (installs packages), then build the vterm module and
@@ -128,6 +129,13 @@ Don't claim a change works without running it. Patterns that worked:
 - `delete-by-moving-to-trash` uses macOS' own trash (`system-move-file-to-trash`); tests
   can't list `~/.Trash` (macOS privacy), so check the file left its folder instead.
 
+**Treemacs (`init-tree.el`)**
+- Plain `treemacs` asks "Project root:" on an empty workspace; `my/project-tree` (`SPC o p`)
+  uses `treemacs-add-and-display-current-project-exclusively` instead (no prompt).
+- Follow mode runs on an *idle* timer: tests must open files via keystrokes
+  (`unread-command-events`), not from a timer, or the tree never follows.
+- State file `.cache/treemacs-persist` is git-ignored.
+
 **Completion / UI**
 - Search commands use a side-by-side vertico layout (`vertico-multiform`). The file finder
   uses its own category `project-finder`: Emacs 30's project *picker* also uses
@@ -175,7 +183,10 @@ Don't claim a change works without running it. Patterns that worked:
   (`security add-internet-password -U -a '<user>^forge' -s api.github.com -w "$(gh auth token)"`). It needs the
   scopes `repo`, `user` and `read:org`; the token from `gh auth token` works once `user`
   is added (`gh auth refresh -h github.com -s user`).
-- Each repo is added once with `M-x forge-add-repository` (fills a local SQLite db).
+- Forge finds the GitHub user via git config: `git config --global github.user <user>` and
+  `git config --global github.api.github.com.user <user>` (set for thijs-creemers).
+- Each repo is added once with `M-x forge-add-repository` (fills `forge-database.sqlite`,
+  a local cache of PRs/issues; git-ignored because it holds private repo data).
 - `SPC g c` (`my/gh-pr-checks`) runs `gh pr checks --watch` in vterm, in a bottom side window.
 
 **Magit / Claude**
@@ -185,7 +196,12 @@ Don't claim a change works without running it. Patterns that worked:
 - Claude window: `my/claude-term-mode` (switched on via advice on
   `claude-code-ide--setup-terminal-keybindings`) sends Claude's shortcuts (Esc, C-c, S-Tab,
   C-r, C-o, ...) to the terminal via evil *insert* aux keymaps, which beat evil's own
-  insert map and vterm's C-c prefix. Only `C-\` stays for Emacs (normal state).
+  insert map and vterm's C-c prefix. Only `C-z` / `C-\` stay for Emacs (normal state); a
+  header line in the Claude window shows this (users kept pressing Esc, which goes to Claude).
+- Claude redraws with ESC[2J; libvterm erases the screen instead of pushing it into the
+  scrollback, so only one screenful was kept. `my/claude-keep-scrollback` (advice on
+  `vterm--filter`, depth -90 = before the anti-flicker queue) turns ESC[2J into "scroll the
+  screen up" and drops ESC[3J, in Claude windows only.
 
 **Emacs Client.app**
 - emacs-plus' AppleScript ran `open -a Emacs`, which launched the separate

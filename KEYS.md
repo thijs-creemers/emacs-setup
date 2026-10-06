@@ -11,6 +11,7 @@ Notation: `SPC` = space (leader key, global commands), `,` = local leader (langu
 | Keys          | Action                                    |
 |---------------|-------------------------------------------|
 | `Esc` / `C-g` | Cancel anything (C-g works everywhere)    |
+| `Cmd-V` / `Cmd-C` | Paste / copy selection, like other Mac apps (also in terminals and prompts) |
 | `M-x`         | Run any command by name                   |
 | `SPC q q`     | Quit Emacs                                |
 | `SPC` + wait  | which-key popup shows next possible keys  |
@@ -30,7 +31,7 @@ Notation: `SPC` = space (leader key, global commands), `,` = local leader (langu
 | `SPC f r` | Recent files                                     |
 | `SPC f h` | Help for function / variable                     |
 | `SPC f d` | Diagnostics (errors / warnings)                  |
-| `SPC f s` | Symbols in file (functions, defs)                |
+| `SPC f s` | Functions / headings in this file (jump, with preview) |
 | `SPC /`   | Search in current buffer                         |
 
 Fuzzy: `icl` finds `init-clojure.el`. Words in any order: `clj core`.
@@ -40,7 +41,8 @@ Start a word with `!` to exclude: `core !test`.
 
 | Keys      | Action                      |
 |-----------|-----------------------------|
-| `SPC b b` | Switch buffer               |
+| `SPC b b` | Switch buffer; in that list `C-d` closes the highlighted buffer (list stays open) |
+| `SPC b i` | Buffer list for bulk cleanup: `d` flag, `x` close flagged (or `m` mark, `D` close marked), `u` unmark, `q` quit |
 | `H` / `L` | Previous / next file buffer (as in nvim) |
 | `SPC b p` / `SPC b n`, `[b` / `]b` | Same: previous / next |
 | `SPC b d` | Delete (close) buffer, closes previews too |
@@ -77,6 +79,7 @@ LSP, `run-python` and `compile` all see those variables. Other projects don't.
 | `C-o`     | Jump back (after `gd`)              |
 | `K`       | Docs for symbol at point            |
 | `SPC c u` | Find usages / references            |
+| `SPC c s` | Functions / headings in this file (same as `SPC f s`) |
 | `SPC c a` | Code actions (quick fixes)          |
 | `SPC c r` | Rename symbol everywhere            |
 | `SPC c f` | Format buffer                       |
@@ -320,6 +323,32 @@ Setup once per repo: `M-x forge-add-repository` in that repo. Token: see AGENTS.
 
 ---
 
+## Project tree (Treemacs)
+
+`SPC o p` shows / hides a tree of the current project on the left. It follows the file
+you are editing and switches along with the project. Git colors show changed / new files.
+
+| Keys          | Action                                             |
+|---------------|----------------------------------------------------|
+| `j` / `k`     | Down / up                                          |
+| `TAB`         | Open / close folder                                |
+| `RET`         | Open file (or open / close folder)                 |
+| `o v` / `o h` | Open file in a split side by side / below          |
+| `c f` / `c d` | New file / new folder                              |
+| `R`           | Rename                                             |
+| `m`           | Move                                               |
+| `y f`         | Copy file                                          |
+| `y r` / `y a` | Copy relative / absolute path                      |
+| `d`           | Delete                                             |
+| `t h`         | Show / hide dotfiles                               |
+| `g r`         | Refresh                                            |
+| `?`           | All keys                                           |
+| `q`           | Close the tree                                     |
+
+`C-w l` goes from the tree to your code, `C-w h` back to the tree.
+
+---
+
 ## Files and folders (Dired)
 
 Open: `SPC o d` = folder of the current file (cursor on it), `SPC o D` = project root.
@@ -434,9 +463,14 @@ selection you are on, can use xref / imenu / LSP, and shows its edits as diffs.
 | `SPC a m`          | Menu with all commands                          |
 
 In the Claude window all of Claude's own shortcuts work: `Esc` (interrupt), `Esc Esc`,
-`Shift-Tab` (modes), `Ctrl-C`, `Ctrl-R`, `Ctrl-O`, `Ctrl-T`, `Ctrl-V`, ... `S-RET` = new line.
-**`Ctrl-\`** is the only Emacs key there: it switches to vim normal mode, so `SPC a c`
+`Shift-Tab` (modes), `Ctrl-C`, `Ctrl-R`, `Ctrl-O`, `Ctrl-T`, ... `S-RET` = new line.
+**`Cmd-V` pastes text** into the prompt; `Ctrl-V` is Claude's own image paste.
+**Read earlier output:** `Ctrl-Z`, then scroll with `C-u` / `k` / `gg` (or the mouse wheel),
+search with `/`; `i` jumps back to the prompt. After a window resize, part of the
+conversation may appear twice in the history (as in other terminals).
+**`Ctrl-Z`** (or `Ctrl-\`) is the way out: it switches to vim normal mode, so `SPC a c`
 (hide), `C-w h` (other window), `SPC b d` (close) work. `i` = back to typing to Claude.
+`Esc` does *not* leave: it goes to Claude (interrupt). The window's top line shows this.
 
 ---
 
@@ -497,6 +531,8 @@ Setup once, API key from Linear settings > Security & access:
 | `C-j` / `C-k`     | Next / previous candidate             |
 | `RET`             | Choose                                |
 | `M-RET`           | Use exactly what you typed (new file) |
+| `C-.`             | Actions on the highlighted item (open in split, copy path, delete, ...) |
+| `C-d`             | Buffer lists: close the highlighted buffer |
 | `Backspace` after `/` | File prompt: up to the parent folder |
 | `M-Backspace`     | File prompt: remove one folder / word |
 | `~/` or `/`       | File prompt: start over from home / root |

@@ -74,12 +74,13 @@
   (kbd "<leader>fr") '("Recent files" . consult-recent-file)
   (kbd "<leader>fh") '("Help on symbol" . describe-symbol)
   (kbd "<leader>fd") '("Find problems" . consult-flymake)
-  (kbd "<leader>fs") '("Symbols in file" . consult-imenu)
+  (kbd "<leader>fs") '("Functions / headings in file" . consult-imenu)
   (kbd "<leader>/")  '("Search in buffer" . consult-line)
   ;; buffers
   (kbd "<leader>bb") '("Switch buffer" . consult-buffer)
   (kbd "<leader>bd") '("Close buffer" . my/kill-buffer)
   (kbd "<leader>bs") '("Save" . save-buffer)
+  (kbd "<leader>bi") '("Buffer list (bulk close)" . ibuffer)
   (kbd "<leader>bn") '("Next buffer" . next-buffer)
   (kbd "<leader>bp") '("Previous buffer" . previous-buffer)
   (kbd "]b")         #'next-buffer
@@ -103,6 +104,7 @@
   (kbd "<leader>cf") '("Format file" . eglot-format-buffer)
   (kbd "<leader>cd") '("List problems" . flymake-show-buffer-diagnostics)
   (kbd "<leader>cu") '("Find usages" . xref-find-references)
+  (kbd "<leader>cs") '("Functions / headings in file" . consult-imenu)
   (kbd "]d")         #'flymake-goto-next-error
   (kbd "[d")         #'flymake-goto-prev-error
   ;; git
@@ -127,6 +129,7 @@
   (kbd "<leader>oT") '("Terminal (this folder)" . my/vterm-here)                  ; terminal here
   (kbd "<leader>od") '("Files: this folder" . dired-jump)                     ; folder of this file
   (kbd "<leader>oD") '("Files: project root" . my/dired-project-root)
+  (kbd "<leader>op") '("Project tree (show/hide)" . my/project-tree)
   (kbd "<leader>ou") '("Open URL" . browse-url)                     ; open URL (default: at cursor)
   (kbd "<leader>tb") '("Run bb task" . my/bb-task)
   ;; Claude Code
