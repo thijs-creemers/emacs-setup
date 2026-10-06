@@ -1,6 +1,6 @@
 # emacs-setup
 
-My personal Emacs 30 configuration for macOS (Apple Silicon): Vim keys everywhere,
+My personal Emacs 31 configuration for macOS (Apple Silicon): Vim keys everywhere,
 built for Clojure work, with a fast fuzzy finder, LSP, Git, a terminal and Claude Code
 inside the editor.
 
@@ -31,7 +31,7 @@ inside the editor.
 ```sh
 # Emacs, run as a background service
 brew tap d12frosted/emacs-plus
-brew install emacs-plus@30
+brew install emacs-plus@31
 git clone git@github.com:thijs-creemers/emacs-setup.git ~/.emacs.d
 
 # Tools the config uses (skip what you don't need)
@@ -42,7 +42,7 @@ npm install -g vscode-langservers-extracted @tailwindcss/language-server bash-la
 uv tool install rassumfrassum
 
 # First start installs all packages
-brew services start emacs-plus@30
+brew services start emacs-plus@31
 ```
 
 Then two one-time steps, both described in [AGENTS.md](AGENTS.md): build the vterm module,
@@ -52,7 +52,7 @@ and download the parinfer library. Optional: put your Linear API key in the macO
 
 - Open a window with **Emacs Client** (Applications), or `emacsclient -c`.
 - After editing the config: `SPC h r` reloads it. Bigger changes:
-  `brew services restart emacs-plus@30`.
+  `brew services restart emacs-plus@31`.
 - Lost? Press `SPC` and wait: a panel on the right shows what each next key does.
 
 ## Layout
