@@ -91,9 +91,11 @@ LSP, `run-python` and `compile` all see those variables. Other projects don't.
 | Keys      | Action                         |
 |-----------|--------------------------------|
 | `SPC u t` | Theme: `auto` (follow macOS light/dark), `light` or `dark`; remembered |
+| `SPC u p` | Presentation mode on/off: big font (22pt) everywhere, absolute line numbers |
 
 Auto switches by itself when macOS changes (also macOS "Auto" appearance by daylight).
-Light = Catppuccin Latte, dark = Catppuccin Mocha.
+Light = Catppuccin Latte, dark = Catppuccin Mocha. Fine-tune the size in presentation
+mode with `C-x C-M-+` / `C-x C-M--` (all windows), or `C-x C-+` / `C-x C--` (this buffer).
 
 ### Help
 
@@ -352,6 +354,7 @@ you are editing and switches along with the project. Git colors show changed / n
 | `t h`         | Show / hide dotfiles                               |
 | `g r`         | Refresh                                            |
 | `?`           | All keys                                           |
+| `SPC ...`     | All leader keys work in the tree too (`SPC o p` closes it) |
 | `q`           | Close the tree                                     |
 
 `C-w l` goes from the tree to your code, `C-w h` back to the tree.

@@ -26,7 +26,11 @@
         (treemacs-add-and-display-current-project-exclusively)
       (treemacs))))
 
-(use-package treemacs-evil :after (treemacs evil))
+;; The tree has its own evil state, without the SPC leader: share normal state's menu.
+(use-package treemacs-evil
+  :after (treemacs evil)
+  :config
+  (define-key evil-treemacs-state-map (kbd "SPC") (lookup-key evil-normal-state-map (kbd "<leader>"))))
 (use-package treemacs-magit :after (treemacs magit))   ; refresh git colors after Magit
 
 ;; Same Nerd Font icons as Dired and the status bar.

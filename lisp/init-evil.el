@@ -153,6 +153,7 @@
   (kbd "<leader>lb") '("Choose Linear / Jira" . my/tickets-choose-backend)
   ;; ui
   (kbd "<leader>ut") '("Theme: light / dark / auto" . my/theme-choose)
+  (kbd "<leader>up") '("Presentation mode on/off" . my/presentation-mode)
   ;; help
   (kbd "<leader>hk") '("Cheatsheet (KEYS.md)" . my/open-keys-cheatsheet)
   (kbd "<leader>hr") '("Reload config" . my/reload-config)

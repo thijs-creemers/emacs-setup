@@ -33,11 +33,24 @@
 ;; Size 150 = 15pt.
 (defvar my/fonts '("JetBrainsMono Nerd Font" "JetBrains Mono" "MesloLGS NF" "Fira Code" "Menlo"))
 (defvar my/font-size 150)
+(defvar my/presentation-font-size 220 "Font size in presentation mode (SPC u p).")
 
 (defun my/set-font (&optional frame)
   (with-selected-frame (or frame (selected-frame))
-    (when-let ((font (seq-find (lambda (f) (find-font (font-spec :family f))) my/fonts)))
-      (set-face-attribute 'default nil :family font :height my/font-size))))
+    (when-let* ((font (seq-find (lambda (f) (find-font (font-spec :family f))) my/fonts)))
+      (set-face-attribute 'default nil :family font
+                          :height (if (bound-and-true-p my/presentation-mode) my/presentation-font-size my/font-size)))))
+
+;; Presenting / screen sharing: big font everywhere, absolute line numbers ("line 42").
+(define-minor-mode my/presentation-mode
+  "Big font in all windows and absolute line numbers."
+  :global t
+  (setq-default display-line-numbers-type (if my/presentation-mode t 'relative))
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when display-line-numbers (setq display-line-numbers display-line-numbers-type))))
+  (my/set-font)
+  (message "Presentation mode %s" (if my/presentation-mode "on" "off")))
 
 ;; Daemon has no GUI at start, so also set font on each new frame.
 (my/set-font)

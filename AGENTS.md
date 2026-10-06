@@ -141,6 +141,8 @@ Don't claim a change works without running it. Patterns that worked:
 - Follow mode runs on an *idle* timer: tests must open files via keystrokes
   (`unread-command-events`), not from a timer, or the tree never follows.
 - State file `.cache/treemacs-persist` is git-ignored.
+- treemacs-evil has its own evil state (`treemacs`) without the leader: `SPC` there is bound
+  to normal state's `<leader>` keymap (same object, so new SPC keys show up there too).
 
 **Completion / UI**
 - Search commands use a side-by-side vertico layout (`vertico-multiform`); list is 40% of
