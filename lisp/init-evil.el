@@ -151,6 +151,8 @@
   (kbd "<leader>ls") '("Find ticket" . my/tickets-find)               ; find + view one ticket
   (kbd "<leader>lc") '("Comment on ticket" . my/tickets-comment)      ; comment on a ticket
   (kbd "<leader>lb") '("Choose Linear / Jira" . my/tickets-choose-backend)
+  ;; ui
+  (kbd "<leader>ut") '("Theme: light / dark / auto" . my/theme-choose)
   ;; help
   (kbd "<leader>hk") '("Cheatsheet (KEYS.md)" . my/open-keys-cheatsheet)
   (kbd "<leader>hr") '("Reload config" . my/reload-config)

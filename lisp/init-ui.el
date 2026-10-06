@@ -1,9 +1,33 @@
 ;;; init-ui.el --- Look and feel  -*- lexical-binding: t; -*-
 
-;; Same theme as nvim. Flavors: mocha (dark), macchiato, frappe, latte (light).
+;; Same theme as nvim (catppuccin): mocha when dark, latte when light.
+;; Auto follows macOS light/dark (also its "Auto" by time of day). SPC u t chooses.
+(defcustom my/theme-choice 'auto "auto (follow macOS), light or dark."
+  :type '(choice (const auto) (const light) (const dark)) :group 'faces)
+
+(defun my/theme-apply (&optional appearance)
+  "Load mocha or latte for `my/theme-choice' (APPEARANCE comes from macOS)."
+  (let* ((mode (if (eq my/theme-choice 'auto)
+                   (or appearance (bound-and-true-p ns-system-appearance) 'dark)
+                 my/theme-choice))
+         (flavor (if (eq mode 'light) 'latte 'mocha)))
+    (unless (and (eq flavor catppuccin-flavor) (custom-theme-enabled-p 'catppuccin))
+      (setq catppuccin-flavor flavor)
+      (catppuccin-reload))))
+
+(defun my/theme-choose ()
+  "Choose light, dark or auto (follow macOS); remembered after restart."
+  (interactive)
+  (let ((choice (intern (completing-read "Theme: " '("auto" "light" "dark") nil t))))
+    (customize-save-variable 'my/theme-choice choice)
+    (my/theme-apply)
+    (message "Theme: %s" choice)))
+
 (use-package catppuccin-theme
-  :custom (catppuccin-flavor 'mocha)
-  :config (load-theme 'catppuccin t))
+  :demand t
+  :config
+  (my/theme-apply)
+  (add-hook 'ns-system-appearance-change-functions #'my/theme-apply))
 
 ;; Font: first installed one from this list wins (same as Ghostty).
 ;; Size 150 = 15pt.
@@ -60,7 +84,7 @@
     "SPC b" "buffer"  "SPC c" "code"     "SPC f" "find"  "SPC h" "help"
     "SPC p" "project" "SPC q" "quit"     "SPC w" "window"
     "SPC g" "git"     "SPC o" "open"     "SPC t" "tasks" "SPC l" "tickets"
-    "SPC a" "claude")
+    "SPC a" "claude"  "SPC u" "ui")
   ;; "," group names differ per language, so set them per mode.
   (dolist (mode '(clojure-mode clojurescript-mode clojurec-mode python-mode python-ts-mode))
     (which-key-add-major-mode-key-based-replacements mode

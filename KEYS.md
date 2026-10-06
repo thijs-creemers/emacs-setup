@@ -86,6 +86,15 @@ LSP, `run-python` and `compile` all see those variables. Other projects don't.
 | `SPC c d` | List errors / warnings              |
 | `]d` / `[d` | Next / previous error (flymake)  |
 
+### Look (UI)
+
+| Keys      | Action                         |
+|-----------|--------------------------------|
+| `SPC u t` | Theme: `auto` (follow macOS light/dark), `light` or `dark`; remembered |
+
+Auto switches by itself when macOS changes (also macOS "Auto" appearance by daylight).
+Light = Catppuccin Latte, dark = Catppuccin Mocha.
+
 ### Help
 
 | Keys      | Action                         |
