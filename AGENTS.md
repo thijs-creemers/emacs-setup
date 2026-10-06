@@ -129,6 +129,14 @@ Don't claim a change works without running it. Patterns that worked:
 - `python-mode` is remapped to `python-ts-mode`; keys go on `python-base-mode-map`.
 - `treesit-language-source-alist` needs `(require 'treesit)` before `add-to-list`.
 
+**JavaScript / TypeScript (`init-js.el`)**
+- TypeScript 7 (native) no longer ships `tsserver`, so `typescript-language-server` can't work
+  with it. LSP = `tsc --lsp --stdio` (TS 7's own server, also handles JS).
+- That server reports errors via *pull* diagnostics, which Eglot only supports since 1.20.
+  Emacs 30 bundles 1.17, so `init-lsp.el` installs Eglot from ELPA (1.24). Retested all
+  languages on it; CSS now also gets Tailwind's suggestions.
+- Grammars pinned to v0.21.x (javascript, typescript, tsx, jsdoc, json) for Emacs 30's modes.
+
 **Dired (`init-dired.el`)**
 - In the user's shell `ls` is eza; Dired must use GNU ls, so `insert-directory-program` is
   set to `gls` (coreutils) for `--group-directories-first`.
@@ -237,6 +245,6 @@ Don't claim a change works without running it. Patterns that worked:
 
 Homebrew: `clojure-lsp` (native), `pyright`, `marksman`, `pandoc`, `asciidoctor`, `cmake`,
 `libvterm`, `JetBrains Mono Nerd Font` (cask). npm: `vscode-langservers-extracted`,
-`@tailwindcss/language-server`, `bash-language-server`. Homebrew also: `shellcheck`, `shfmt`, `ruff`. uv: `rassumfrassum`. Optional: `yaml-language-server`.
+`@tailwindcss/language-server`, `bash-language-server`, `typescript` (7.x, for `tsc --lsp`). Homebrew also: `shellcheck`, `shfmt`, `ruff`. uv: `rassumfrassum`. Optional: `yaml-language-server`.
 Linear API key and the Forge GitHub token live in the macOS Keychain (`security add-internet-password -a apikey
 -s api.linear.app -w <KEY>`), never in this repo.

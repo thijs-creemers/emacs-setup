@@ -103,6 +103,9 @@
     (which-key-add-major-mode-key-based-replacements mode
       ", c" "connect"   ", e" "eval"   ", l" "log/repl"
       ", r" "refresh"   ", t" "test"   ", p" "parinfer"   ", d" "django"))
+  (dolist (mode '(js-ts-mode typescript-ts-mode tsx-ts-mode))
+    (which-key-add-major-mode-key-based-replacements mode
+      ", c" "repl"   ", e" "eval"   ", l" "repl buffer"   ", r" "run"   ", t" "test"))
   (which-key-mode 1))
 
 (provide 'init-ui)

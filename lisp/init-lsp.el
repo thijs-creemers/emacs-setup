@@ -18,6 +18,13 @@
       `("rass" "--" ,@command "--" "tailwindcss-language-server" "--stdio")
     command))
 
+;; Eglot from ELPA: the built-in 1.17 lacks pull diagnostics, which TypeScript 7's
+;; server needs (errors never showed). use-package can't upgrade built-ins itself.
+(unless (package-installed-p 'eglot '(1 20))
+  (let ((package-install-upgrade-built-in t))
+    (unless (assq 'eglot package-archive-contents) (package-refresh-contents))
+    (package-install 'eglot)))
+
 (use-package eglot
   :ensure nil
   :custom

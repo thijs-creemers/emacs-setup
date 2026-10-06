@@ -422,6 +422,7 @@ Open two Dired windows side by side (`SPC w v`, then `SPC o d` / `-` in the othe
 | `SPC o u` | Open a URL in the browser (pre-filled from cursor)  |
 | `gx`      | Open URL / Markdown link under cursor in browser    |
 | `SPC t b` | Pick and run a bb task (nearest `bb.edn`)           |
+| `SPC t n` | Pick and run an npm script (nearest `package.json`) |
 
 Terminal = vterm (fast, native). Gets the project's `.env`. `SPC o t` reuses the
 project terminal if it is open. Fallback: `M-x eat` (pure Lisp, slower).
@@ -430,6 +431,35 @@ Terminal starts in insert mode: all keys go to the shell (`C-w` deletes a word t
 Close: `Esc SPC b d` (no questions), or type `exit`.
 Programs that need Esc themselves (vim in the terminal): `C-c C-z` toggles where Esc goes.
 bb tasks run in a compile buffer: errors are clickable, `q` closes.
+
+---
+
+## JavaScript / TypeScript / JSON
+
+`.js` `.jsx` `.mjs` `.cjs`, `.ts`, `.tsx`, `.json`: tree-sitter colors. LSP is TypeScript 7's
+own server (`tsc --lsp`): completion, type errors as you type, hover (`K`), `gd`, find usages.
+
+| Keys      | Action                                             |
+|-----------|----------------------------------------------------|
+| `SPC c f` | Format (2 spaces)                                  |
+| `SPC c a` | Quick fix / organize imports                       |
+| `SPC c r` | Rename everywhere                                  |
+| `]d` / `[d` | Next / previous error                            |
+| `C-j` (insert) | Emmet in JSX/TSX: `div.card` → `<div className="card">` |
+| `SPC t n` | Run an npm script                                  |
+
+Language menu under `,` (same layout as Clojure / Python):
+
+| Keys      | Action                                                        |
+|-----------|---------------------------------------------------------------|
+| `, c j`   | Start Node REPL (`, l g` = go to it)                          |
+| `, e e`   | Send expression before the cursor to the REPL (visual: selection) |
+| `, e b`   | JS: send buffer to the REPL. TS: run the file                 |
+| `, r r`   | Run this file with node (TypeScript too; Node strips types)   |
+| `, t n`   | Tests in this file (Vitest / Jest / `node --test`, auto-detected) |
+| `, t a`   | All tests                                                     |
+| `, o`     | Organize imports                                              |
+| `, n`     | Run an npm script                                             |
 
 ---
 

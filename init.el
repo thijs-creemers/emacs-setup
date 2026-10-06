@@ -21,6 +21,7 @@
 (require 'init-markdown)    ; markdown-mode + preview
 (require 'init-asciidoc)    ; adoc-mode + preview/pdf
 (require 'init-css)         ; css/scss + LSP + color preview
+(require 'init-js)          ; javascript/typescript/json
 (require 'init-git)         ; magit + diff-hl
 (require 'init-dired)       ; file manager: move, rename, delete
 (require 'init-tree)        ; project tree sidebar (treemacs)

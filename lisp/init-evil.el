@@ -132,6 +132,7 @@
   (kbd "<leader>op") '("Project tree (show/hide)" . my/project-tree)
   (kbd "<leader>ou") '("Open URL" . browse-url)                     ; open URL (default: at cursor)
   (kbd "<leader>tb") '("Run bb task" . my/bb-task)
+  (kbd "<leader>tn") '("Run npm script" . my/npm-script)
   ;; Claude Code
   (kbd "<leader>ac") '("Claude: show / hide" . my/claude-toggle)                    ; start / show / hide
   (kbd "<leader>af") '("Focus Claude" . claude-code-ide-switch-to-buffer)    ; focus Claude
