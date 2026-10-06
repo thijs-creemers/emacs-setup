@@ -144,12 +144,13 @@
   (kbd "<leader>ax") '("Drop file/selection from context" . claude-code-ide-clear-selection)  ; drop file/selection from prompt
   (kbd "<leader>aa") '("Accept change" . my/claude-accept-diff)
   (kbd "<leader>ad") '("Reject change" . my/claude-deny-diff)
-  ;; Linear
-  (kbd "<leader>ll") '("My issues" . linear-emacs-list-issues)
-  (kbd "<leader>lp") '("Project board" . my/linear-project-board)
-  (kbd "<leader>ln") '("New issue" . linear-emacs-new-issue)
-  (kbd "<leader>ls") '("Find ticket" . my/linear-show-ticket)          ; find + view one ticket
-  (kbd "<leader>lc") '("Comment on ticket" . my/linear-add-comment)          ; comment on a ticket
+  ;; Tickets: Linear or Jira, per project (SPC l b)
+  (kbd "<leader>ll") '("My issues" . my/tickets-my-issues)
+  (kbd "<leader>lp") '("Project board" . my/tickets-board)
+  (kbd "<leader>ln") '("New issue" . my/tickets-new)
+  (kbd "<leader>ls") '("Find ticket" . my/tickets-find)               ; find + view one ticket
+  (kbd "<leader>lc") '("Comment on ticket" . my/tickets-comment)      ; comment on a ticket
+  (kbd "<leader>lb") '("Choose Linear / Jira" . my/tickets-choose-backend)
   ;; help
   (kbd "<leader>hk") '("Cheatsheet (KEYS.md)" . my/open-keys-cheatsheet)
   (kbd "<leader>hr") '("Reload config" . my/reload-config)

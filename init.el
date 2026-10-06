@@ -26,6 +26,8 @@
 (require 'init-tree)        ; project tree sidebar (treemacs)
 (require 'init-term)        ; vterm terminal + bb tasks
 (require 'init-linear)      ; Linear issues in Org
+(require 'init-jira)        ; Jira Cloud issues in Org
+(require 'init-tickets)     ; SPC l: Linear or Jira per project
 (require 'init-claude)      ; Claude Code CLI (claude-code-ide)
 
 ;; Back to a normal GC threshold after startup.

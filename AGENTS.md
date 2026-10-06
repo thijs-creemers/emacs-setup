@@ -1,7 +1,7 @@
 # AGENTS.md — notes for working on this Emacs config
 
 Personal Emacs 31 setup (emacs-plus, macOS, Apple Silicon): Evil (vim keys), Clojure/CIDER,
-Python, YAML, Markdown, AsciiDoc, CSS, Git, terminal, Claude Code, Linear.
+Python, YAML, Markdown, AsciiDoc, CSS, Git, terminal, Claude Code, Linear, Jira.
 User-facing key reference: `KEYS.md`. This file is for whoever changes the config.
 
 ## Layout
@@ -18,6 +18,7 @@ User-facing key reference: `KEYS.md`. This file is for whoever changes the confi
 | `parinfer-rust/` | Downloaded parinfer library (git-ignored, see Clojure gotchas) |
 | `tree-sitter/` | Bash + Python grammars, compiled on first start (git-ignored) |
 | `.cache/` | Treemacs state (git-ignored) |
+| `tickets-backends.eld` | Linear/Jira choice per project (git-ignored) |
 
 Git tracks only the config and docs; packages, caches and personal state are in `.gitignore`.
 New machine: clone, start Emacs once (installs packages), then build the vterm module and
@@ -142,7 +143,8 @@ Don't claim a change works without running it. Patterns that worked:
 - State file `.cache/treemacs-persist` is git-ignored.
 
 **Completion / UI**
-- Search commands use a side-by-side vertico layout (`vertico-multiform`). The file finder
+- Search commands use a side-by-side vertico layout (`vertico-multiform`); list is 40% of
+  the frame, capped at `my/vertico-list-max-width` (90) for full screen. The file finder
   uses its own category `project-finder`: Emacs 30's project *picker* also uses
   `project-file`, so that category would split the picker too.
 - Preview buffers (eww) and terminals close with `SPC b d` via `my/kill-buffer`.
@@ -182,6 +184,18 @@ Don't claim a change works without running it. Patterns that worked:
 - Don't bind `linear-emacs-list-issues-by-project`: it shows nothing, fetches only *my*
   tickets and overwrites linear.org. `SPC l p` is `my/linear-project-board` (own buffer,
   all open tickets via `project.issues` filtered on state type started/unstarted/backlog).
+
+**Jira + ticket backends (`init-jira.el`, `init-tickets.el`)**
+- `SPC l` commands are `my/tickets-*` dispatchers: buffer's own system first (jira/linear
+  minor modes, linear.org), else the project's choice in `tickets-backends.eld`, else ask.
+- Jira Cloud via REST API **v2** (wiki markup, not v3's ADF); pandoc `-f jira`/`-t jira`
+  converts to/from Markdown, one pandoc call per ticket view (split marker).
+- Search uses `POST search/jql` with `nextPageToken` (old `/search` is retired).
+- Auth: Keychain *internet* password, server = the site, account = e-mail; auth-source
+  returns the account as `:user`. Site is `my/jira-site` (asked once, custom.el).
+- jira.org is generated; `, t` / `, v` there come from `my/jira-org-mode` (minor-mode keys
+  beat org-mode-map's `, t` = `my/org-todo-choose`, which is Linear-only).
+- Tested with mocked responses only, plus a real request to a bogus site (error path).
 
 **Forge (GitHub PRs/issues)**
 - Forge does not use `gh`; it reads a token from the Keychain (`auth-sources` is set in

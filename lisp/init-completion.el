@@ -20,9 +20,16 @@
 
 ;; Layout: search commands show list left, preview right (Telescope).
 ;; Everything else (M-x, project picker, prompts): normal minibuffer.
+;; List = 40% of the frame, but at most `my/vertico-list-max-width' columns (full screen).
+(defvar my/vertico-list-max-width 90 "Max width (columns) of the search list.")
+
+(defun my/vertico-list-width (window)
+  (let ((width (min my/vertico-list-max-width (round (* 0.4 (frame-width (window-frame window)))))))
+    (window-resize window (- width (window-total-width window)) t t)))
+
 (let ((side-by-side '(buffer (vertico-buffer-display-action
                               . (display-buffer-in-side-window
-                                 (side . left) (window-width . 0.4))))))
+                                 (side . left) (window-width . my/vertico-list-width))))))
   (setq vertico-multiform-categories `((project-finder ,@side-by-side))
         vertico-multiform-commands
         (mapcar (lambda (cmd) (cons cmd side-by-side))

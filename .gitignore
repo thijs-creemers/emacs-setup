@@ -24,3 +24,4 @@
 
 # Local backup of the original Emacs Client.app
 /backup-Emacs-Client.app/
+/tickets-backends.eld
