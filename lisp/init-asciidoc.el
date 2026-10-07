@@ -21,7 +21,7 @@
   ;; "," = AsciiDoc commands.
   (evil-define-key 'normal adoc-mode-map
     (kbd "<localleader>p") '("Preview" . my/adoc-preview)          ; preview side by side
-    (kbd "<localleader>o") '("Open in browser" . my/adoc-open-in-browser)
+    (kbd "<localleader>o") '("Preview in browser (GitHub look)" . my/preview-browser)
     (kbd "<localleader>P") '("Export PDF" . my/adoc-export-pdf)
     (kbd "<localleader>i") '("Jump to heading" . consult-imenu)))          ; jump to heading
 
@@ -50,12 +50,6 @@
 (defun my/adoc-refresh-preview ()
   (when (get-buffer-window "*eww*")
     (my/adoc-show-preview)))
-
-(defun my/adoc-open-in-browser ()
-  "Render and open in the default browser (full styling)."
-  (interactive)
-  (save-buffer)
-  (browse-url-of-file (my/adoc-render-html)))
 
 (defun my/adoc-export-pdf ()
   "Export to a PDF next to the source file and open it."

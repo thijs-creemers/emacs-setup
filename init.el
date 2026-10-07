@@ -18,6 +18,7 @@
 (require 'init-python)      ; python + pyright
 (require 'init-yaml)        ; yaml-mode
 (require 'init-shell)       ; bash/zsh: tree-sitter, LSP, ShellCheck
+(require 'init-preview)     ; GitHub-style previews (browser + eww)
 (require 'init-markdown)    ; markdown-mode + preview
 (require 'init-asciidoc)    ; adoc-mode + preview/pdf
 (require 'init-css)         ; css/scss + LSP + color preview

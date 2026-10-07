@@ -14,6 +14,7 @@ User-facing key reference: `KEYS.md`. This file is for whoever changes the confi
 | `KEYS.md` | Cheatsheet for the user (`SPC h k` opens it) |
 | `custom.el` | Customize output; don't hand-edit |
 | `rass/slow-start.py` | Parked rass preset (see Tailwind below) |
+| `preview/` | CSS for the GitHub-style browser preview (`init-preview.el`) |
 | `eat-terminfo/` | Generated: eat terminfo compiled for macOS (git-ignored) |
 | `parinfer-rust/` | Downloaded parinfer library (git-ignored, see Clojure gotchas) |
 | `tree-sitter/` | Bash + Python grammars, compiled on first start (git-ignored) |
@@ -163,6 +164,20 @@ Don't claim a change works without running it. Patterns that worked:
   `$HOME`. Batch mode inserts no undo boundaries, so test undo in GUI with keystrokes.
 - jinx needs `brew install enchant pkgconf`; Dutch is aspell's `nl` (not `nl_NL`). Its
   overlays have `category jinx-overlay`. Enabled via `text-mode-hook` only.
+
+**Previews (`init-preview.el`)**
+- eww (shr) ignores CSS, so GitHub's look is only possible in a real browser (no xwidgets
+  in emacs-plus). `, p` = eww with tuned shr faces, `, o` = browser with GitHub CSS.
+- `preview/github-markdown.css` is sindresorhus/github-markdown-css 5.9.0 (MIT, vendored,
+  light+dark via `prefers-color-scheme`). `rouge-github.css` (AsciiDoc code) comes from
+  `rougify style github.light/.dark --scope ".markdown-body .highlight"`; `pandoc-highlight.css`
+  from pandoc's `$highlighting-css$` (pygments / breezedark). Regenerate, don't hand-edit.
+- Output goes to `$TMPDIR/emacs-preview/` with `<base href>` = the source folder, so
+  relative images work. Live reload: the page polls a sibling `.js` stamp file via
+  `<script>` tags (allowed on file://, unlike fetch); a new stamp → `location.reload()`.
+- Testing: headless Chrome writes `--screenshot` at load but never exits (the poll keeps
+  it busy): wrap it in `timeout`. Reload test: `--remote-debugging-port`, change the HTML
+  title + stamp, poll `/json/list` for the `file://` page's title (flipped within 1 s).
 
 **Completion / UI**
 - Search commands use a side-by-side vertico layout (`vertico-multiform`); list is 40% of

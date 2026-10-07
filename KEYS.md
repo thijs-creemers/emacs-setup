@@ -283,7 +283,7 @@ inside strings), ShellCheck warnings as you type, completion.
 | Keys  | Action                                   |
 |-------|------------------------------------------|
 | `, p` | Live preview side by side (toggle)       |
-| `, o` | Open rendered page in browser            |
+| `, o` | Preview in browser, looks like GitHub (refreshes on every save) |
 | `, h` | Hide / show markup (`**`, `#`, links)    |
 | `, l` | Insert link                              |
 | `, t` | Align table under cursor                 |
@@ -292,6 +292,10 @@ inside strings), ShellCheck warnings as you type, completion.
 | `TAB` | Fold / unfold heading                    |
 
 Tip: in a table, `TAB` in insert mode jumps to the next cell and aligns.
+
+Previews: `, o` uses GitHub's own stylesheet (light/dark follows macOS) and reloads by
+itself after each save, keeping the scroll position. `, p` stays inside Emacs, but Emacs'
+browser can't do CSS, so it only resembles GitHub (font, heading sizes).
 
 ---
 
@@ -302,7 +306,7 @@ Tip: in a table, `TAB` in insert mode jumps to the next cell and aligns.
 | Keys  | Action                                         |
 |-------|------------------------------------------------|
 | `, p` | Preview side by side (refreshes on every save) |
-| `, o` | Open rendered page in browser (full styling)   |
+| `, o` | Preview in browser, looks like GitHub (refreshes on every save) |
 | `, P` | Export PDF next to the file and open it        |
 | `, i` | Jump to heading                                |
 

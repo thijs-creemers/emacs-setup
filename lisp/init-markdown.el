@@ -17,7 +17,7 @@
   ;; "," = Markdown commands.
   (evil-define-key 'normal markdown-mode-map
     (kbd "<localleader>p") '("Preview" . markdown-live-preview-mode)  ; preview side by side
-    (kbd "<localleader>o") '("Open in browser" . markdown-open)               ; open in browser
+    (kbd "<localleader>o") '("Preview in browser (GitHub look)" . my/preview-browser)
     (kbd "<localleader>h") '("Hide / show markup" . markdown-toggle-markup-hiding)
     (kbd "<localleader>l") '("Insert link" . markdown-insert-link)
     (kbd "<localleader>t") '("Align table" . markdown-table-align)

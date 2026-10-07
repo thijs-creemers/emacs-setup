@@ -1,0 +1,24 @@
+/* AsciiDoc blocks inside GitHub's .markdown-body: admonitions look like GitHub alerts. */
+.markdown-body .admonitionblock { margin-bottom: 16px; }
+.markdown-body .admonitionblock table {
+  display: table; width: 100%; border: 0; margin: 0;
+  border-left: .25em solid var(--borderColor-accent-emphasis, #0969da);
+}
+.markdown-body .admonitionblock tr, .markdown-body .admonitionblock td {
+  border: 0; background: transparent;
+}
+.markdown-body .admonitionblock td { padding: 0 1em; vertical-align: top; }
+.markdown-body .admonitionblock td.icon { width: 1%; white-space: nowrap; }
+.markdown-body .admonitionblock td.icon .title { font-weight: 600; color: var(--fgColor-accent, #0969da); }
+.markdown-body .admonitionblock.tip table { border-left-color: var(--borderColor-success-emphasis, #1a7f37); }
+.markdown-body .admonitionblock.tip td.icon .title { color: var(--fgColor-success, #1a7f37); }
+.markdown-body .admonitionblock.important table { border-left-color: var(--borderColor-done-emphasis, #8250df); }
+.markdown-body .admonitionblock.important td.icon .title { color: var(--fgColor-done, #8250df); }
+.markdown-body .admonitionblock.warning table { border-left-color: var(--borderColor-attention-emphasis, #9a6700); }
+.markdown-body .admonitionblock.warning td.icon .title { color: var(--fgColor-attention, #9a6700); }
+.markdown-body .admonitionblock.caution table { border-left-color: var(--borderColor-danger-emphasis, #cf222e); }
+.markdown-body .admonitionblock.caution td.icon .title { color: var(--fgColor-danger, #d1242f); }
+/* Block titles (.Title above listings, tables, images) */
+.markdown-body .title { font-weight: 600; margin-bottom: 8px; }
+.markdown-body .listingblock, .markdown-body .literalblock { margin-bottom: 16px; }
+.markdown-body #toc ul { list-style: none; padding-left: 1em; }
