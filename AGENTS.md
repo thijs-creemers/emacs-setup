@@ -259,6 +259,10 @@ Don't claim a change works without running it. Patterns that worked:
   scrollback, so only one screenful was kept. `my/claude-keep-scrollback` (advice on
   `vterm--filter`, depth -90 = before the anti-flicker queue) turns ESC[2J into "scroll the
   screen up" and drops ESC[3J, in Claude windows only.
+  It must use the *terminal's* rows (recorded from `vterm--new` / `vterm--set-size`), not the
+  window's: claude-code-ide skips height-only resizes, and the mismatch left the window blank.
+- `SPC a R` (`my/claude-redraw`) resizes the terminal one column narrower and back: two
+  SIGWINCHs make Claude repaint at the right size.
 
 **Emacs Client.app**
 - emacs-plus' AppleScript ran `open -a Emacs`, which launched the separate

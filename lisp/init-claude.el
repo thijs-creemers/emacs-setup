@@ -75,12 +75,18 @@
 ;; Scrollback: Claude redraws with "clear screen" (ESC[2J). libvterm erases the
 ;; screen, so earlier output was lost; real terminals push it into scrollback.
 ;; Do the same in Claude windows: scroll the screen up first, drop ESC[3J.
+;; Uses the terminal's own height: claude-code-ide skips height-only resizes, so
+;; the window height can differ, and too many blank lines left the window empty.
+(defvar-local my/claude-term-rows nil "Terminal rows as vterm last set them.")
+(defun my/claude-note-rows (_term rows _cols) (setq my/claude-term-rows rows))
+(defun my/claude-note-new-rows (rows &rest _) (setq my/claude-term-rows rows))
+
 (defun my/claude-keep-scrollback (orig proc input)
   (let ((buf (process-buffer proc)))
     (when (and (buffer-live-p buf) (string-prefix-p "*claude-code[" (buffer-name buf))
                (string-search "\033[" input))
-      (let* ((win (get-buffer-window buf t))
-             (rows (if win (window-body-height win) 0))
+      (let* ((win (get-buffer-window buf t))      ; window height only for older sessions
+             (rows (or (buffer-local-value 'my/claude-term-rows buf) (and win (window-body-height win)) 0))
              (scroll-up (concat (format "\033[%d;1H" rows) (make-string rows ?\n) "\033[H")))
         (setq input (string-replace "\033[3J" "" input))
         (when (> rows 0)
@@ -88,7 +94,27 @@
     (funcall orig proc input)))
 
 (with-eval-after-load 'vterm
+  (advice-add 'vterm--set-size :after #'my/claude-note-rows)
+  (advice-add 'vterm--new :after #'my/claude-note-new-rows)
   ;; depth -90: run before claude-code-ide's anti-flicker advice queues the output
   (advice-add 'vterm--filter :around #'my/claude-keep-scrollback '((depth . -90))))
+
+;; SPC a R: blank or garbled Claude window -> resize the terminal by one column and
+;; back. Claude gets two resize signals and repaints everything at the right size.
+(defun my/claude-redraw ()
+  "Make Claude repaint its window."
+  (interactive)
+  (let* ((win (or (seq-find (lambda (w) (string-prefix-p "*claude-code[" (buffer-name (window-buffer w))))
+                            (window-list nil 'never))
+                  (user-error "No Claude window visible")))
+         (buf (window-buffer win))
+         (proc (get-buffer-process buf))
+         (rows (window-body-height win))
+         (cols (max vterm-min-window-width (window-body-width win))))
+    (cl-flet ((resize (c) (with-current-buffer buf
+                            (let ((inhibit-read-only t)) (vterm--set-size vterm--term rows c))
+                            (set-process-window-size proc rows c))))
+      (resize (1- cols))
+      (run-at-time 0.15 nil (lambda () (when (process-live-p proc) (resize cols)))))))
 
 (provide 'init-claude)

@@ -518,6 +518,7 @@ selection you are on, can use xref / imenu / LSP, and shows its edits as diffs.
 | `SPC a r`          | Resume an older conversation                    |
 | `SPC a C`          | Continue the last conversation                  |
 | `SPC a q`          | Stop Claude                                     |
+| `SPC a R`          | Redraw the Claude window (when blank / garbled) |
 | `SPC a x`          | Drop the file/selection Claude currently sees   |
 | `SPC a m`          | Menu with all commands                          |
 

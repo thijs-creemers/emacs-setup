@@ -165,6 +165,7 @@
   (kbd "<leader>aC") '("Continue last conversation" . claude-code-ide-continue)            ; continue last one
   (kbd "<leader>ae") '("Interrupt Claude" . claude-code-ide-send-escape)         ; interrupt Claude
   (kbd "<leader>aq") '("Stop Claude" . claude-code-ide-stop)
+  (kbd "<leader>aR") '("Redraw Claude window" . my/claude-redraw)
   (kbd "<leader>ax") '("Drop file/selection from context" . claude-code-ide-clear-selection)  ; drop file/selection from prompt
   (kbd "<leader>aa") '("Accept change" . my/claude-accept-diff)
   (kbd "<leader>ad") '("Reject change" . my/claude-deny-diff)
