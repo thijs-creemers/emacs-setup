@@ -8,6 +8,25 @@
   :config
   (evil-mode 1))
 
+;; Undo survives closing a file and restarting Emacs (like nvim's undofile).
+(use-package undo-fu-session
+  :custom
+  (undo-fu-session-directory (expand-file-name "undo-fu-session" user-emacs-directory))
+  (undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
+  :config (undo-fu-session-global-mode 1))
+
+;; SPC b u: undo history as a tree. h/l = back/forward in time, j/k = other
+;; branch, RET = keep this state, q = cancel.
+(use-package vundo
+  :commands vundo
+  :custom (vundo-glyph-alist vundo-unicode-symbols)
+  :config
+  (evil-set-initial-state 'vundo-mode 'emacs)
+  (keymap-set vundo-mode-map "h" #'vundo-backward)
+  (keymap-set vundo-mode-map "l" #'vundo-forward)
+  (keymap-set vundo-mode-map "j" #'vundo-next)
+  (keymap-set vundo-mode-map "k" #'vundo-previous))
+
 ;; Vim keys for magit, dired, help, cider, etc.
 ;; REPLs: RET in insert mode evaluates (CIDER: see init-clojure.el).
 (use-package evil-collection
@@ -81,6 +100,8 @@
   (kbd "<leader>bd") '("Close buffer" . my/kill-buffer)
   (kbd "<leader>bs") '("Save" . save-buffer)
   (kbd "<leader>bi") '("Buffer list (bulk close)" . ibuffer)
+  (kbd "<leader>bB") '("Switch buffer (all tabs)" . my/consult-buffer-all)
+  (kbd "<leader>bu") '("Undo history (tree)" . vundo)
   (kbd "<leader>bn") '("Next buffer" . next-buffer)
   (kbd "<leader>bp") '("Previous buffer" . previous-buffer)
   (kbd "]b")         #'next-buffer
@@ -91,8 +112,10 @@
   (kbd "<leader>pf") '("Find file in project" . my/find-file-in-project)
   (kbd "<leader>pp") '("Switch project" . project-switch-project)
   (kbd "<leader>pe") '("Reload .env" . my/reload-project-dotenv)
-  (kbd "<leader>pd") '("Remove project from list" . project-forget-project)        ; remove one from the list
-  (kbd "<leader>pc") '("Clean up project list" . my/project-cleanup)            ; remove gone / temp / package dirs
+  (kbd "<leader>pd") '("Remove project from list" . project-forget-project)
+  (kbd "<leader>pc") '("Clean up project list" . my/project-cleanup)
+  (kbd "<leader>pt") '("Switch project tab" . tabspaces-switch-or-create-workspace)
+  (kbd "<leader>pk") '("Close project tab + its buffers" . tabspaces-kill-buffers-close-workspace)
   ;; windows
   (kbd "<leader>wv") '("Split side by side" . split-window-right)
   (kbd "<leader>ws") '("Split below" . split-window-below)

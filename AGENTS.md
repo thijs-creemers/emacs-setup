@@ -18,6 +18,7 @@ User-facing key reference: `KEYS.md`. This file is for whoever changes the confi
 | `parinfer-rust/` | Downloaded parinfer library (git-ignored, see Clojure gotchas) |
 | `tree-sitter/` | Bash + Python grammars, compiled on first start (git-ignored) |
 | `.cache/` | Treemacs state (git-ignored) |
+| `undo-fu-session/` | Saved undo history per file (git-ignored) |
 | `tickets-backends.eld` | Linear/Jira choice per project (git-ignored) |
 
 Git tracks only the config and docs; packages, caches and personal state are in `.gitignore`.
@@ -152,6 +153,17 @@ Don't claim a change works without running it. Patterns that worked:
 - treemacs-evil has its own evil state (`treemacs`) without the leader: `SPC` there is bound
   to normal state's `<leader>` keymap (same object, so new SPC keys show up there too).
 
+**Workflow extras (wgrep, tabs, undo, spelling)**
+- wgrep: `SPC f g` → `C-c C-e` (embark-export) → grep buffer; `i` = wgrep edit, `, ,` writes
+  (`wgrep-auto-save-buffer t`).
+- tabspaces: `tabspaces-project-switch-opens-workspace` routes `SPC p p` into a project tab;
+  `consult-buffer-list-function` = tab-local buffers. Its project-todo.org creation, VC init
+  and session file are switched off.
+- undo-fu-session skips `/tmp` (`undo-fu-session-temp-directories`): test with a file in
+  `$HOME`. Batch mode inserts no undo boundaries, so test undo in GUI with keystrokes.
+- jinx needs `brew install enchant pkgconf`; Dutch is aspell's `nl` (not `nl_NL`). Its
+  overlays have `category jinx-overlay`. Enabled via `text-mode-hook` only.
+
 **Completion / UI**
 - Search commands use a side-by-side vertico layout (`vertico-multiform`); list is 40% of
   the frame, capped at `my/vertico-list-max-width` (90) for full screen. The file finder
@@ -245,6 +257,6 @@ Don't claim a change works without running it. Patterns that worked:
 
 Homebrew: `clojure-lsp` (native), `pyright`, `marksman`, `pandoc`, `asciidoctor`, `cmake`,
 `libvterm`, `JetBrains Mono Nerd Font` (cask). npm: `vscode-langservers-extracted`,
-`@tailwindcss/language-server`, `bash-language-server`, `typescript` (7.x, for `tsc --lsp`). Homebrew also: `shellcheck`, `shfmt`, `ruff`. uv: `rassumfrassum`. Optional: `yaml-language-server`.
+`@tailwindcss/language-server`, `bash-language-server`, `typescript` (7.x, for `tsc --lsp`). Homebrew also: `shellcheck`, `shfmt`, `ruff`, `enchant`, `pkgconf`. uv: `rassumfrassum`. Optional: `yaml-language-server`.
 Linear API key and the Forge GitHub token live in the macOS Keychain (`security add-internet-password -a apikey
 -s api.linear.app -w <KEY>`), never in this repo.

@@ -105,6 +105,18 @@
 (use-package embark-consult
   :after (embark consult))
 
+;; Edit search results across the project: SPC f g, C-c C-e = results as a
+;; buffer; i = edit them as text (like Dired), , , = write to all files, , k = cancel.
+(use-package wgrep
+  :custom (wgrep-auto-save-buffer t)                    ; save the changed files
+  :config
+  (evil-define-key 'normal grep-mode-map "i" '("Edit results" . wgrep-change-to-wgrep-mode))
+  (evil-define-key 'normal wgrep-mode-map
+    (kbd "<localleader>,") '("Apply to files" . wgrep-finish-edit)
+    (kbd "<localleader>k") '("Cancel" . wgrep-abort-changes)))
+
+(keymap-set vertico-map "C-c C-e" #'embark-export)
+
 ;; C-d in a buffer list (SPC b b): close the highlighted buffer, list refreshes.
 ;; In other prompts C-d stays "delete character".
 (defun my/vertico-kill-buffer ()

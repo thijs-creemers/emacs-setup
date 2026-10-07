@@ -36,7 +36,7 @@ git clone git@github.com:thijs-creemers/emacs-setup.git ~/.emacs.d
 
 # Tools the config uses (skip what you don't need)
 brew install clojure-lsp/brew/clojure-lsp-native pyright marksman pandoc asciidoctor \
-             cmake libvterm node uv shellcheck shfmt ruff
+             cmake libvterm node uv shellcheck shfmt ruff enchant pkgconf
 brew install --cask font-jetbrains-mono-nerd-font
 npm install -g vscode-langservers-extracted @tailwindcss/language-server bash-language-server typescript
 uv tool install rassumfrassum

@@ -19,6 +19,7 @@
 /url/
 /request/
 /.cache/
+/undo-fu-session/
 /forge-database.sqlite*
 /custom.el
 

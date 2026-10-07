@@ -25,6 +25,8 @@
 (require 'init-git)         ; magit + diff-hl
 (require 'init-dired)       ; file manager: move, rename, delete
 (require 'init-tree)        ; project tree sidebar (treemacs)
+(require 'init-tabs)        ; one tab (workspace) per project
+(require 'init-spell)       ; spell checking for prose (jinx)
 (require 'init-term)        ; vterm terminal + bb tasks
 (require 'init-linear)      ; Linear issues in Org
 (require 'init-jira)        ; Jira Cloud issues in Org

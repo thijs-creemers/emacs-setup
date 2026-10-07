@@ -37,12 +37,18 @@ Notation: `SPC` = space (leader key, global commands), `,` = local leader (langu
 Fuzzy: `icl` finds `init-clojure.el`. Words in any order: `clj core`.
 Start a word with `!` to exclude: `core !test`.
 
+**Change many files at once:** `SPC f g`, search, then `C-c C-e` = results as a list.
+`i` makes it editable: change the lines like normal text (`:s/old/new/`, macros, ...),
+then `Esc` and `, ,` writes every change to its file (`, k` cancels).
+
 ### Buffers and project
 
 | Keys      | Action                      |
 |-----------|-----------------------------|
 | `SPC b b` | Switch buffer; in that list `C-d` closes the highlighted buffer (list stays open) |
 | `SPC b i` | Buffer list for bulk cleanup: `d` flag, `x` close flagged (or `m` mark, `D` close marked), `u` unmark, `q` quit |
+| `SPC b B` | Switch buffer from *all* tabs (`SPC b b` shows this tab's buffers) |
+| `SPC b u` | Undo history as a tree: `h`/`l` back/forward in time, `j`/`k` other branch, `RET` keep, `q` cancel |
 | `H` / `L` | Previous / next file buffer (as in nvim) |
 | `SPC b p` / `SPC b n`, `[b` / `]b` | Same: previous / next |
 | `SPC b d` | Delete (close) buffer, closes previews too |
@@ -52,6 +58,13 @@ Start a word with `!` to exclude: `core !test`.
 | `SPC p e` | Reload `.env` after editing it  |
 | `SPC p d` | Remove a project from the list (choose it) |
 | `SPC p c` | Clean up: projects whose folder is gone, temp folders, package sources |
+| `SPC p t` | Switch to another project tab |
+| `SPC p k` | Close this project tab and its buffers |
+| `gt` / `gT` | Next / previous tab |
+
+**One tab per project:** `SPC p p` opens a project in its own tab (shown at the top once
+there are 2+ tabs), with its own windows and buffer list. Switching tabs restores each
+project's layout (code, Claude, REPL).
 
 A project = the git repo of the current file. Get in by opening any file in it,
 via `SPC p p`, or `emacsclient -c ~/path/to/repo`. Add all repos under a folder at once:
@@ -582,6 +595,7 @@ The first Jira command asks for the site (`<company>.atlassian.net`) and remembe
 | `ds` + char      | Delete surround, e.g. `ds(`                 |
 | `S` + char (visual) | Surround selection                       |
 | `C-r`            | Redo                                        |
+| `u` after reopening | Undo still works: history survives closing files and restarts |
 | `C-u` / `C-d`    | Scroll half page up / down                  |
 
 ---
@@ -610,6 +624,17 @@ The first Jira command asks for the site (`<company>.atlassian.net`) and remembe
 | `C-j` / `C-k`     | Next / previous      |
 | `RET` / `TAB`     | Insert               |
 | `Esc`             | Close popup          |
+
+---
+
+## Spelling (Markdown, AsciiDoc, Org, commit messages)
+
+English and Dutch, in text only (not in code). Mistakes are underlined.
+
+| Keys        | Action                                            |
+|-------------|---------------------------------------------------|
+| `z=`        | Suggestions for the word under the cursor (also "save word") |
+| `]s` / `[s` | Next / previous mistake                           |
 
 ---
 
