@@ -100,6 +100,7 @@
   (kbd "<leader>bd") '("Close buffer" . my/kill-buffer)
   (kbd "<leader>bs") '("Save" . save-buffer)
   (kbd "<leader>bi") '("Buffer list (bulk close)" . ibuffer)
+  (kbd "<leader>bk") '("Close buffers of a kind" . my/kill-buffers-of-kind)
   (kbd "<leader>bB") '("Switch buffer (all tabs)" . my/consult-buffer-all)
   (kbd "<leader>bu") '("Undo history (tree)" . vundo)
   (kbd "<leader>bn") '("Next buffer" . next-buffer)

@@ -11,6 +11,7 @@
 (require 'init-env)         ; .env from project root per buffer
 (require 'init-ui)          ; theme, font, line numbers
 (require 'init-evil)        ; vim keys + leader key (SPC)
+(require 'init-buffers)     ; buffer groups, close a whole group
 (require 'init-completion)  ; vertico, consult, corfu
 (require 'init-lsp)         ; eglot (built-in LSP client)
 (require 'init-clojure)     ; clojure-mode + cider + parinfer

@@ -179,6 +179,12 @@ Don't claim a change works without running it. Patterns that worked:
   it busy): wrap it in `timeout`. Reload test: `--remote-debugging-port`, change the HTML
   title + stamp, poll `/json/list` for the `file://` page's title (flipped within 1 s).
 
+**Buffers (`init-buffers.el`)**
+- `my/buffer-groups` (ibuffer filter syntax, first match wins) drives both ibuffer's groups
+  and `SPC b k`. ibuffer calls the rest "Default"; we use that name too.
+- In ibuffer `,` is evil-collection's sort key, so the local leader doesn't work there:
+  closing a group is `C`.
+
 **Completion / UI**
 - Search commands use a side-by-side vertico layout (`vertico-multiform`); list is 40% of
   the frame, capped at `my/vertico-list-max-width` (90) for full screen. The file finder

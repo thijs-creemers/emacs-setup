@@ -46,7 +46,8 @@ then `Esc` and `, ,` writes every change to its file (`, k` cancels).
 | Keys      | Action                      |
 |-----------|-----------------------------|
 | `SPC b b` | Switch buffer; in that list `C-d` closes the highlighted buffer (list stays open) |
-| `SPC b i` | Buffer list for bulk cleanup: `d` flag, `x` close flagged (or `m` mark, `D` close marked), `u` unmark, `q` quit |
+| `SPC b i` | Buffer list, grouped (Claude, Magit, Terminals, Tickets, Dired, Previews, Help and logs, Files, Default = the rest). `C` on a group closes the whole group; `d` flag + `x` close flagged; `u` unmark; `q` quit |
+| `SPC b k` | Close all buffers of one kind: pick e.g. `Magit (7)`, one confirmation |
 | `SPC b B` | Switch buffer from *all* tabs (`SPC b b` shows this tab's buffers) |
 | `SPC b u` | Undo history as a tree: `h`/`l` back/forward in time, `j`/`k` other branch, `RET` keep, `q` cancel |
 | `H` / `L` | Previous / next file buffer (as in nvim) |
