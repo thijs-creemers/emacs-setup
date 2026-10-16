@@ -1,6 +1,6 @@
 # AGENTS.md — notes for working on this Emacs config
 
-Personal Emacs 31 setup (emacs-plus, macOS, Apple Silicon): Evil (vim keys), Clojure/CIDER,
+Personal Emacs 30 setup (emacs-plus, macOS, Apple Silicon): Evil (vim keys), Clojure/CIDER,
 Python, YAML, Markdown, AsciiDoc, CSS, Git, terminal, Claude Code, Linear, Jira.
 User-facing key reference: `KEYS.md`. This file is for whoever changes the config.
 
@@ -45,12 +45,12 @@ New topic: add `lisp/init-foo.el`, add `(require 'init-foo)` to `init.el`, docum
 
 ## Daemon workflow
 
-- Emacs runs as a **brew service**: `emacs-plus@31` (launchd, `--fg-daemon`, auto-respawns).
+- Emacs runs as a **brew service**: `emacs-plus@30` (launchd, `--fg-daemon`, auto-respawns).
 - Windows come from `/Applications/Emacs Client.app` (emacsclient). See "Emacs Client.app".
 - **Reload** config in the running server: `SPC h r` or
   `emacsclient -e '(my/reload-config)'`. It re-loads all `lisp/init-*.el`.
   Removed settings/bindings stay active until restart.
-- **Restart**: `brew services restart emacs-plus@31`. Never `emacs --daemon` (fails: already
+- **Restart**: `brew services restart emacs-plus@30`. Never `emacs --daemon` (fails: already
   running) or `kill-emacs` (launchd respawns it, possibly before your edit lands).
 - Before a restart, check for unsaved buffers; a restart also kills CIDER REPLs.
 - **Prompts block the server.** A `y-or-n-p` during reload (e.g. first install of a `:vc`
@@ -273,9 +273,10 @@ Don't claim a change works without running it. Patterns that worked:
 **Emacs Client.app**
 - emacs-plus' AppleScript ran `open -a Emacs`, which launched the separate
   `/Applications/Emacs.app` → a second standalone Emacs next to the server window.
-  Patched to `open -a /opt/homebrew/opt/emacs-plus@31/Emacs.app` and re-signed
+  Patched to stable brew paths (`/opt/homebrew/opt/emacs-plus@30/bin/emacsclient` and
+  `open -a /opt/homebrew/opt/emacs-plus@30/Emacs.app`) and re-signed
   (`codesign --force --deep -s -`). Backup: `backup-Emacs-Client.app`. A brew reinstall can
-  undo this (the upgrade to @31 did); symptom is "two clients". Re-patch: `osadecompile`
+  undo this; symptom is "two clients". Re-patch: `osadecompile`
   `Contents/Resources/Scripts/main.scpt`, fix the path, `osacompile`, re-sign.
 
 ## External tools this config uses

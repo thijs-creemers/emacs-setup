@@ -67,6 +67,20 @@ then `Esc` and `, ,` writes every change to its file (`, k` cancels).
 there are 2+ tabs), with its own windows and buffer list. Switching tabs restores each
 project's layout (code, Claude, REPL).
 
+### Tabs (`SPC TAB`)
+
+| Keys                     | Action                                       |
+|--------------------------|----------------------------------------------|
+| `SPC TAB TAB`            | Back to the previous tab (toggle)            |
+| `SPC TAB t`              | Choose a tab from a list                     |
+| `SPC TAB p`              | Open a project in a tab                      |
+| `SPC TAB n` / `SPC TAB N` | Next / previous tab (also `gt` / `gT`)      |
+| `SPC TAB 1`–`9`, **Cmd-1–9** | Go to tab 1–9                            |
+| **Cmd-{** / **Cmd-}**    | Previous / next tab (like a browser)         |
+| `SPC TAB r`              | Rename tab                                   |
+| `SPC TAB d`              | Close tab (buffers stay open)                |
+| `SPC TAB k`              | Close tab and its buffers                    |
+
 A project = the git repo of the current file. Get in by opening any file in it,
 via `SPC p p`, or `emacsclient -c ~/path/to/repo`. Add all repos under a folder at once:
 `M-x project-remember-projects-under`. Temp folders and package sources are never added,

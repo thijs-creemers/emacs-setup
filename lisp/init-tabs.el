@@ -1,7 +1,8 @@
 ;;; init-tabs.el --- One tab (workspace) per project  -*- lexical-binding: t; -*-
 
 ;; SPC p p opens a project in its own tab, with its own windows and buffer list;
-;; SPC b b then shows only that tab's buffers (SPC b B: all). gt / gT switch tabs.
+;; SPC b b then shows only that tab's buffers (SPC b B: all). Tab keys: SPC TAB,
+;; Cmd-1..9, Cmd-{ / Cmd-}, gt / gT.
 ;; The tab bar only appears with 2+ tabs.
 (use-package tabspaces
   :demand t
@@ -21,6 +22,13 @@
   :config
   (tabspaces-mode 1)
   (setq consult-buffer-list-function #'tabspaces-local-buffer-list))
+
+;; Mac-style: Cmd-1..9 go to tab N, Cmd-{ / Cmd-} previous / next tab.
+;; (tab-bar-select-tab reads the digit from the key that was pressed.)
+(dotimes (i 9)
+  (keymap-global-set (format "M-%d" (1+ i)) #'tab-bar-select-tab))
+(keymap-global-set "M-{" #'tab-bar-switch-to-prev-tab)
+(keymap-global-set "M-}" #'tab-bar-switch-to-next-tab)
 
 (defun my/consult-buffer-all ()
   "Switch to any buffer, from all tabs."

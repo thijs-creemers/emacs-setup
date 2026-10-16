@@ -97,7 +97,7 @@
     "SPC b" "buffer"  "SPC c" "code"     "SPC f" "find"  "SPC h" "help"
     "SPC p" "project" "SPC q" "quit"     "SPC w" "window"
     "SPC g" "git"     "SPC o" "open"     "SPC t" "tasks" "SPC l" "tickets"
-    "SPC a" "claude"  "SPC u" "ui")
+    "SPC a" "claude"  "SPC u" "ui"  "SPC TAB" "tabs")
   ;; "," group names differ per language, so set them per mode.
   (dolist (mode '(clojure-mode clojurescript-mode clojurec-mode python-mode python-ts-mode))
     (which-key-add-major-mode-key-based-replacements mode
